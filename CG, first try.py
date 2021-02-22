@@ -3,7 +3,6 @@ import tkinter.messagebox as msg
 import tkinter.ttk as ttk
 import numpy as np
 
-
 screen_width, screen_height = 800, 800
 real_width, real_height = 600, 600
 min_x, max_y = -300, 300
