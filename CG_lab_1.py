@@ -14,6 +14,16 @@ def delete_all(dots1, dots2, tree1, tree2):
     dots2.clear()
     tree1.delete(*tree1.get_children())
     tree2.delete(*tree2.get_children())
+
+    try:
+        canv_root.destroy()
+    except:
+        pass
+
+    try:
+        text_root.destroy()
+    except:
+        pass
  
  
 def stupid_check(dot1, dot2, dot3):
@@ -119,8 +129,8 @@ def create_axis(canv, zero_dot):
 
 def unit_1_task(dots1, dots2, tree1, tree2):
     if len(dots1) <= 2 or len(dots2) <= 2:
-        msg.showerror("Incorrect input",
-            "There are not enought\npoints for triangules")
+        msg.showerror("Некорректный ввод",
+            "Недостаточно точек для\nпостроения треугольника")
         return
 
     result_triangles = []
@@ -138,8 +148,8 @@ def unit_1_task(dots1, dots2, tree1, tree2):
                     stupid_triangles.append(cur_triangle)
 
     if not len(stupid_triangles):
-        msg.showinfo("Incorrect input",
-            "There are not enough\nobtuse triangles")
+        msg.showinfo("Некорректный ввод",
+            "В первом мн-ве недостаточно\nтупых треугольников")
         return
 
     flag = 0
@@ -161,17 +171,17 @@ def unit_1_task(dots1, dots2, tree1, tree2):
                                 result_triangles = triangle, cur_triangle
 
     if not (len(result_triangles) or flag):
-        msg.showerror("Incorrect input",
-            "There are not enough\nobtuse triangles")
+        msg.showerror("Некорректный ввод",
+            "Во втором мн-ве недостаточно\nтупых треугольников")
         return
 
     if flag and not len(result_triangles):
         result_triangles = triangle, cur_triangle
-        angle_info = "The only available obtuse angles match each other, \
-so angle can't be calculated"
+        angle_info = "Единственные доступные вершины тупых углов совпадают, \
+поэтому угол не может быть вычислен"
     else:
-        angle_info = "Result angle: \
-{:.2f} degrees".format(np.degrees(max_angle))
+        angle_info = "Получившийся угол: \
+{:.2f} градусов".format(np.degrees(max_angle))
 
     global min_x
     global max_y
@@ -191,14 +201,14 @@ so angle can't be calculated"
         pass
 
     text_root = tk.Toplevel(table_app)
-    text_root.title("Result")
-    text_root.geometry("700x300")
+    text_root.title("Результат")
+    text_root.geometry("870x300")
  
     app = tk.Frame(text_root)
     app.pack()
     
     canv_root = tk.Toplevel(table_app)
-    canv_root.title("Computer graphics #1")
+    canv_root.title("Компьютерная графика №1")
     canv_root.geometry((str(screen_width) + 'x' + str(screen_height)))
     canv_root.resizable(False, False)
 
@@ -242,10 +252,10 @@ so angle can't be calculated"
     draw_line(change_coords(result_triangles[0][0]),
               change_coords(result_triangles[1][0]), canv)
 
-    result_text = angle_info + "\nLegend: #Number: (X; Y); Obtuse angle's \
-vertex displayed 1st\n\nTriangle 1:\n#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; \
-{:.2f})\n#{:d}: ({:.2f}; {:.2f})\n\nTriangle 2:\n#{:d}: ({:.2f}; {:.2f})\n\
-#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; {:.2f})\
+    result_text = angle_info + "\nЛегенда: #Номер: (X; Y); Вершина, содержащая \
+тупой угол, отображается первой\n\nТреугольник 1:\n#{:d}: ({:.2f}; {:.2f})\n\
+#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; {:.2f})\n\nТреугольник 2:\n\
+#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; {:.2f})\
 ".format(result_triangles[0][0][2], result_triangles[0][0][0],
          result_triangles[0][0][1], result_triangles[0][1][2],
          result_triangles[0][1][0], result_triangles[0][1][1],
@@ -263,11 +273,14 @@ vertex displayed 1st\n\nTriangle 1:\n#{:d}: ({:.2f}; {:.2f})\n#{:d}: ({:.2f}; \
 
 
 def dot_handle_dialog(dots, entr, color, tree):
-    string = entr.get().strip()
-    
+    string = entr.get()
+
+    string = " ".join(string.split())
+    string.strip()
+
     if len(string) == 0:
-        msg.showerror("Incorrect input",
-                      "Enter coordinates in correct format")
+        msg.showerror("Некорректный ввод",
+                      "Не введено ни одной точки")
     else:
         try:
             new_dots = [float(i) for i in string.split(" ")]
@@ -275,8 +288,9 @@ def dot_handle_dialog(dots, entr, color, tree):
             if len(new_dots) % 2:
                 raise BaseException("Must be doubled")
         except:
-            msg.showerror("Incorrect input",
-                          "Enter coordinates in correct format")
+            msg.showerror("Некорректный ввод",
+                          "Введите координаты в правильной форме\n\
+Например: -4.4 10   6.76  -12.0")
         else:
             coords = list(zip(new_dots[0::2], new_dots[1::2]))
             
@@ -305,11 +319,12 @@ def table_update(dots, tree):
 def delete_dot(dots, tree):
     elem = tree.selection()
     if not elem:
-        msg.showerror("Incorrect input", "Select dot in required table")
+        msg.showerror("Некорректный ввод",
+                      "Выберите точку в соответствующей таблице")
         return
     
     if len(elem) > 1:
-        msg.showerror("Incorrect input", "More than one dot selected")
+        msg.showerror("Некорректный ввод", "Выберете только одну точку")
         return
     
     ind = tree.index(elem)
@@ -318,11 +333,14 @@ def delete_dot(dots, tree):
 
 
 def edit_dot(dots, tree, enter_window, entr, elem):
-    string = entr.get().strip()
+    string = entr.get()
+
+    string = " ".join(string.split())
+    string.strip()
     
     if len(string) == 0:
-        msg.showerror("Incorrect input",
-                      "Enter coordinates in correct format 1")
+        msg.showerror("Некорректный ввод",
+                      "Координаты не введены")
     else:
         try:
             new_coord = [float(i) for i in string.split(" ")]
@@ -330,8 +348,9 @@ def edit_dot(dots, tree, enter_window, entr, elem):
             if not len(new_coord) == 2:
                 raise BaseException("Must be doubled")
         except:
-            msg.showerror("Incorrect input",
-                          "Enter coordinates in correct format 2")
+            msg.showerror("Некорректный ввод",
+                          "Введите координаты в правильной форме\n\
+Например: -4.4    10")
         else:
             ind = tree.index(elem)
             dots[ind] = (new_coord[0], new_coord[1], dots[ind][2])
@@ -343,51 +362,53 @@ def edit_dot(dots, tree, enter_window, entr, elem):
 def dot_handle(dots, tree, table_app):
     elem = tree.selection()
     if not elem:
-        msg.showerror("Incorrect input",
-                      "Select dot in required table")
+        msg.showerror("Некорректный ввод",
+                      "Выберите точку в соответствующей таблице")
         return
     
     if len(elem) > 1:
-        msg.showerror("Incorrect input",
-                      "More than one dot selected")
+        msg.showerror("Некорректный ввод", "Выберете только одну точку")
         return
     
     enter_window = tk.Toplevel(table_app)
-    enter_window.title("Dot edit")
+    enter_window.title("Изменение точки")
     enter_window.geometry("500x170")
  
     app = tk.Frame(enter_window)
     app.pack(padx=10, pady=10, fill=tk.BOTH)
  
-    info_text = "Enter new coordinates of point (separated by space):"
+    info_text = "Введите новые координаты точки (разделённые пробелами):"
     lbl = tk.Label(app, text=info_text, font="Arial 14")
     lbl.pack(padx=10, pady=10, side=tk.TOP)
  
     entr = tk.Entry(app, width=30, font="Arial 14")
     entr.pack(padx=20, pady=10, side=tk.TOP)
  
-    btn = tk.Button(app, text="Change dot", font="Arial 14",
-                    command=lambda : edit_dot(dots, tree, enter_window, entr, elem))
+    btn = tk.Button(app, text="Изменить точку", font="Arial 14",
+                    command=lambda : edit_dot(dots, tree, enter_window,
+                                              entr, elem))
     btn.pack(padx=20, pady=10, side=tk.TOP)
  
     enter_window.mainloop()
 
 
 def info():
-    msg.showinfo("Information", "Computer graphics #1\n\
-Developer: Alahov Andrey, IU7-42B\n\n\
-This program finds 2 triangles such, that a straight line, \
-passing through their obtuse angles, forms max angle with Ox\n\n\
-To make points enter cordinates in following format: X Y X Y ...\n\
-To delete or edit point select them in respective table\n\
-Triangle and dots from 1st set is blue, from 2nd set is red\n\
-Resulting line is green")
+    msg.showinfo("Информация", "Компьютерная графика #1\n\
+Разработчик: Алахов Андрей, ИУ7-42б\n\n\
+Эта программа находит такие 2 треугольника, что прямая линия, \
+проходящая через их тупые углы, образует наибольший угол с Ox\n\n\
+Для создания точек введите их координаты в следующем формате: X Y X Y ...\n\
+Также можно добавлять точки, кликая на холст: ЛКМ для добавления в 1-ое мн-во, \
+ПКМ для добавления во 2-ое мн-во\n\
+Для удаления или изменения точки выберите их в соответствующей таблице\n\n\
+Треугольник и точки из 1-го мн-ва голубые, из 2-го мн-ва красные\n\
+Результирующая линия зелёная")
 
 
 def main_init(table_app):
     table_app.grid()
 
-    info_text = "Enter the coordinates of the points (separated by space):"
+    info_text = "Введите координаты точек (разделённые пробелами):"
     lbl = tk.Label(table_app, text=info_text, font="Arial 14")
     lbl.grid(row = 0, column = 0, columnspan = 4)
 
@@ -395,48 +416,48 @@ def main_init(table_app):
     entr.grid(row = 1, column = 0, columnspan = 4)
     entr.insert(0, "80 40 -221 73 0 -48")
 
-    btn1 = tk.Button(table_app, font="Arial 14", text="Add to 1st set",
+    btn1 = tk.Button(table_app, font="Arial 14", text="Добавить в 1-ое мн-во",
                      bg="#00FFFF", foreground="black",
                      command=lambda : dot_handle_dialog(dots1, entr,
                                                         "#00FFFF", tree1))
     btn1.grid(row = 2, column = 1, sticky = tk.E)
     
-    btn2 = tk.Button(table_app, font="Arial 14", text="Add to 2nd set",
+    btn2 = tk.Button(table_app, font="Arial 14", text="Добавить во 2-ое мн-во",
                      bg="#FF0000", foreground="black",
                      command=lambda : dot_handle_dialog(dots2, entr,
                                                         "#FF0000", tree2))
     btn2.grid(row = 2, column = 2, sticky = tk.W)
 
-    btn3 = tk.Button(table_app, font="Arial 14", text="Delete from 1st set",
+    btn3 = tk.Button(table_app, font="Arial 14", text="Удалить из 1-го мн-ва",
                      bg="#00FFFF", foreground="black",
                      command=lambda : delete_dot(dots1, tree1))
     btn3.grid(row = 2, column = 0, sticky = tk.E)
     
-    btn4 = tk.Button(table_app, font="Arial 14", text="Delete from 2nd set",
+    btn4 = tk.Button(table_app, font="Arial 14", text="Удалить из 2-го мн-ва",
                      bg="#FF0000", foreground="black",
                      command=lambda : delete_dot(dots2, tree2))
     btn4.grid(row = 2, column = 3, sticky = tk.W)
 
-    btn5 = tk.Button(table_app, font="Arial 14", text="Edit dot from 1st set",
+    btn5 = tk.Button(table_app, font="Arial 14", text="Изменить точку из 1-го мн-ва",
                      bg="#00FFFF", foreground="black",
                      command=lambda : dot_handle(dots1, tree1, table_app))
     btn5.grid(row = 3, column = 0, columnspan = 2, sticky = tk.E)
     
-    btn6 = tk.Button(table_app, font="Arial 14", text="Edit dot from 2nd set",
+    btn6 = tk.Button(table_app, font="Arial 14", text="Изменить точку из 2-го мн-ва",
                      bg="#FF0000", foreground="black",
                      command=lambda : dot_handle(dots2, tree2, table_app))
     btn6.grid(row = 3, column = 2, columnspan = 2, sticky = tk.W)
 
-    btn7 = tk.Button(table_app, font="Arial 14", text="Info",
+    btn7 = tk.Button(table_app, font="Arial 14", text="Информация",
                      command=lambda : info())
     btn7.grid(row = 5, column = 0, sticky = tk.E)
 
-    btn8 = tk.Button(table_app, font="Arial 14", text="Result",
+    btn8 = tk.Button(table_app, font="Arial 14", text="Результат",
                      bg="#008000", foreground="black",
                      command=lambda : unit_1_task(dots1, dots2, tree1, tree2))
     btn8.grid(row = 5, column = 1, columnspan = 2, sticky = tk.E + tk.W)
     
-    btn9 = tk.Button(table_app, font="Arial 14", text="Clear",
+    btn9 = tk.Button(table_app, font="Arial 14", text="Очистить",
                      command=lambda : delete_all(dots1, dots2, tree1, tree2))
     btn9.grid(row = 5, column = 3, sticky = tk.W)
 
@@ -486,8 +507,8 @@ if __name__ == "__main__":
     table_root = tk.Tk()
     table_app = tk.Frame(table_root)
     table_app.pack()
-    table_root.title("Table place")
-    table_root.geometry((str(640) + 'x' + str(400)))
+    table_root.title("Основное меню")
+    table_root.geometry((str(855) + 'x' + str(400)))
 
     main_init(table_app)
 
