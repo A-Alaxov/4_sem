@@ -13,10 +13,25 @@ def get_middle(dot1, dot2):
     return ((dot1[0] + dot2[0]) / 2, (dot1[1] + dot2[1]) / 2)
 
 
+def get_len(dot1, dot2):
+    return np.sqrt((dot1[0] - dot2[0]) ** 2 +
+                     (dot1[1] - dot2[1]) ** 2)
+
+
 def rotate_dot(dot, angle, centre):
     angle = np.radians(angle)
     return (centre[0] - (centre[0] - dot[0]) * np.cos(angle) + (dot[1] - centre[1]) * np.sin(angle),
             centre[1] + (centre[0] - dot[0]) * np.sin(angle) + (dot[1] - centre[1]) * np.cos(angle))
+
+
+def shift_dot(dot, x, y):
+    return (dot[0] + x, dot[1] + y)
+
+
+def scale_dot(dot, kx, ky, centre):
+    dx = kx * (dot[0] - centre[0])
+    dy = ky * (dot[1] - centre[1])
+    return (centre[0] + dx, centre[1] + dy)
 
 
 def change_coords(dot):
@@ -117,22 +132,23 @@ def draw_figure(figure, canv):
     centre = get_middle(rhomb0, rhomb2)
     up_dot = get_middle(centre, rhomb0)
     down_dot = get_middle(centre, rhomb2)
-    radius = np.sqrt((rhomb0[0] - centre[0]) ** 2 +
-                     (rhomb0[1] - centre[1]) ** 2)
+    
+    x_radius = get_len(rhomb1, centre) / 2
+    y_radius = get_len(rhomb0, centre)
 
     draw_line(up_dot, down_dot, canv)
-    draw_line(rotate_dot(up_dot, 90, centre),
-              rotate_dot(down_dot, 90, centre), canv)
+    draw_line(get_middle(get_middle(rhomb3, centre), centre),
+              get_middle(get_middle(rhomb1, centre), centre), canv)
 
-    canv.create_oval(centre[0] - radius / 2, centre[1] - radius / 2,
-                     centre[0] + radius / 2, centre[1] + radius / 2,
+    canv.create_oval(centre[0] - x_radius / 2, centre[1] - y_radius / 2,
+                     centre[0] + x_radius / 2, centre[1] + y_radius / 2,
                      width = 2, outline = "#00FFFF")
 
-    canv.create_arc(rhomb3[0] - radius, rhomb3[1] - radius,
-                    rhomb3[0] + radius, rhomb3[1] + radius,
+    canv.create_arc(rhomb3[0] - x_radius, rhomb3[1] - y_radius,
+                    rhomb3[0] + x_radius, rhomb3[1] + y_radius,
                     start = find_angle(figure[0], rhomb3), extent = 180, width = 2, outline = "#00FFFF")
-    canv.create_arc(rhomb1[0] - radius, rhomb1[1] - radius,
-                    rhomb1[0] + radius, rhomb1[1] + radius,
+    canv.create_arc(rhomb1[0] - x_radius, rhomb1[1] - y_radius,
+                    rhomb1[0] + x_radius, rhomb1[1] + y_radius,
                     start = find_angle(figure[2], rhomb1), extent = 180, width = 2, outline = "#00FFFF")
 
 
@@ -196,6 +212,58 @@ def rotate_figure(figure, entr):
         else:
             for i in range(4):
                 figure[i] = rotate_dot(figure[i], new_dots[2], (new_dots[0], new_dots[1]))
+
+            unit_1_task(figure)
+
+
+def shift_figure(figure, entr):
+    string = entr.get()
+
+    string = " ".join(string.split())
+    string.strip()
+
+    if len(string) == 0:
+        msg.showerror("Некорректный ввод",
+                      "Не введено ни одной точки")
+    else:
+        try:
+            new_dots = [float(i) for i in string.split(" ")]
+                    
+            if len(new_dots) % 2:
+                raise BaseException("Must be doubled")
+        except:
+            msg.showerror("Некорректный ввод",
+                          "Введите координаты в правильной форме\n\
+Например: -4.4 10   6.76  -12.0")
+        else:
+            for i in range(4):
+                figure[i] = shift_dot(figure[i], new_dots[0], new_dots[1])
+
+            unit_1_task(figure)
+
+
+def scale_figure(figure, entr):
+    string = entr.get()
+
+    string = " ".join(string.split())
+    string.strip()
+
+    if len(string) == 0:
+        msg.showerror("Некорректный ввод",
+                      "Не введено ни одной точки")
+    else:
+        try:
+            new_dots = [float(i) for i in string.split(" ")]
+                    
+            if len(new_dots) % 2:
+                raise BaseException("Must be doubled")
+        except:
+            msg.showerror("Некорректный ввод",
+                          "Введите координаты в правильной форме\n\
+Например: -4.4 10   6.76  -12.0")
+        else:
+            for i in range(4):
+                figure[i] = scale_dot(figure[i], new_dots[2], new_dots[3], (new_dots[0], new_dots[1]))
 
             unit_1_task(figure)
 
@@ -325,15 +393,14 @@ def main_init(table_app):
                      command=lambda : rotate_figure(figure, entr))
     btn1.grid(row = 2, column = 1, sticky = tk.E)
     
-    btn2 = tk.Button(table_app, font="Arial 14", text="Добавить во 2-ое мн-во",
+    btn2 = tk.Button(table_app, font="Arial 14", text="Сместить",
                      bg="#FF0000", foreground="black",
-                     command=lambda : dot_handle_dialog(dots2, entr,
-                                                        "#FF0000", tree2))
+                     command=lambda : shift_figure(figure, entr))
     btn2.grid(row = 2, column = 2, sticky = tk.W)
 
-    btn3 = tk.Button(table_app, font="Arial 14", text="Удалить из 1-го мн-ва",
+    btn3 = tk.Button(table_app, font="Arial 14", text="Масштабировать",
                      bg="#00FFFF", foreground="black",
-                     command=lambda : delete_dot(dots1, tree1))
+                     command=lambda : scale_figure(figure, entr))
     btn3.grid(row = 2, column = 0, sticky = tk.E)
     
     btn4 = tk.Button(table_app, font="Arial 14", text="Удалить из 2-го мн-ва",
