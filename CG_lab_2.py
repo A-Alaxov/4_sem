@@ -20,8 +20,10 @@ def get_len(dot1, dot2):
 
 def rotate_dot(dot, angle, centre):
     angle = np.radians(angle)
-    return (centre[0] - (centre[0] - dot[0]) * np.cos(angle) + (dot[1] - centre[1]) * np.sin(angle),
-            centre[1] + (centre[0] - dot[0]) * np.sin(angle) + (dot[1] - centre[1]) * np.cos(angle))
+    return (centre[0] - (centre[0] - dot[0]) * np.cos(angle) +
+            (dot[1] - centre[1]) * np.sin(angle),
+            centre[1] + (centre[0] - dot[0]) * np.sin(angle) +
+            (dot[1] - centre[1]) * np.cos(angle))
 
 
 def shift_dot(dot, x, y):
@@ -62,6 +64,33 @@ def draw_dot(dot, color, canv):
 def draw_line(dot1, dot2, canv):
     canv.create_line(dot1[0], dot1[1], dot2[0], dot2[1],
                      fill="#00FFFF", tags=["line", "for_delete"], width=2)
+
+
+def get_circle(centre, r, half):
+    arc = []
+    num = 60
+    
+    step = r / num
+    if half == "full":
+        step *= 2
+
+    start1 = -r
+    start2 = r
+    if half == "right":
+        start1 = 0
+    if half == "left":
+        start2 = 0
+
+    for i in range(num + 1):
+        x = start1 + step * i
+        y = np.sqrt((1 - (x ** 2) / (r ** 2)) * r ** 2)
+        arc.append((x + centre[0], y + centre[1]))
+    for i in range(num + 1):
+        x = start2 - step * i
+        y = -np.sqrt((1 - (x ** 2) / (r ** 2)) * r ** 2)
+        arc.append((x + centre[0], y + centre[1]))
+
+    return arc
 
 
 def create_axis(canv, zero_dot):
@@ -140,16 +169,10 @@ def draw_figure(figure, canv):
     draw_line(get_middle(get_middle(rhomb3, centre), centre),
               get_middle(get_middle(rhomb1, centre), centre), canv)
 
-    canv.create_oval(centre[0] - x_radius / 2, centre[1] - y_radius / 2,
-                     centre[0] + x_radius / 2, centre[1] + y_radius / 2,
-                     width = 2, outline = "#00FFFF")
+    canv.create_polygon(figure[4], width = 2, fill = "", outline = "#00FFFF")
 
-    canv.create_arc(rhomb3[0] - x_radius, rhomb3[1] - y_radius,
-                    rhomb3[0] + x_radius, rhomb3[1] + y_radius,
-                    start = find_angle(figure[0], rhomb3), extent = 180, width = 2, outline = "#00FFFF")
-    canv.create_arc(rhomb1[0] - x_radius, rhomb1[1] - y_radius,
-                    rhomb1[0] + x_radius, rhomb1[1] + y_radius,
-                    start = find_angle(figure[2], rhomb1), extent = 180, width = 2, outline = "#00FFFF")
+    canv.create_polygon(figure[5], width = 2, fill = "", outline = "#00FFFF")
+    canv.create_polygon(figure[6], width = 2, fill = "", outline = "#00FFFF")
 
 
 def delete_all(dots1, dots2, tree1, tree2):
@@ -170,27 +193,99 @@ def delete_all(dots1, dots2, tree1, tree2):
 
 
 def unit_1_task(figure):
-    global min_x
-    global max_y
-    global real_width
-    global real_height
     global canv_root
-    global text_root
 
     screen_figure = []
+    circle = []
+    left = []
+    right = []
 
     for i in range(4):
         screen_figure.append(change_coords(figure[i]))
-    
+
+    for i in range(len(figure[4])):
+        circle.append(change_coords(figure[4][i]))
+        left.append(change_coords(figure[5][i]))
+        right.append(change_coords(figure[6][i]))
+
+    screen_figure.append(circle)
+    screen_figure.append(left)
+    screen_figure.append(right)
+
+
     canv.delete("all")
 
     create_axis(canv, change_coords((0, 0)))
     draw_figure(screen_figure, canv)
 
     centre = get_middle(figure[0], figure[2])
-    draw_dot(centre, "#008000", canv)
+    draw_dot(centre, "#00FF00", canv)
 
-def rotate_figure(figure, entr):
+
+def copy_figure(figure, back_figure):
+    back_figure[0] = figure[0]
+    back_figure[1] = figure[1]
+    back_figure[2] = figure[2]
+    back_figure[3] = figure[3]
+    back_figure[4] = figure[4][:]
+    back_figure[5] = figure[5][:]
+    back_figure[6] = figure[6][:]
+
+def rotate_figure(figure, previous_figure, entr2, entr3):
+    string = entr2.get()
+    string = " ".join(string.split())
+    string.strip()
+
+    if len(string) == 0:
+        msg.showerror("Некорректный ввод",
+                      "Не введён центр вращения")
+    else:
+        try:
+            new_dots = [float(i) for i in string.split(" ")]
+                    
+            if len(new_dots) != 2:
+                raise BaseException("Must be doubled")
+        except:
+            msg.showerror("Некорректный ввод",
+                          "Введите координаты в правильной форме\n\
+Например: -4.4  10")
+        else:
+            angle_string = entr3.get()
+            angle_string = " ".join(angle_string.split())
+            angle_string.strip()
+    
+            if len(angle_string) == 0:
+                msg.showerror("Некорректный ввод",
+                              "Не введён центр вращения")
+            else:
+                try:
+                    angle = [float(i) for i in angle_string.split(" ")]
+                            
+                    if len(angle) != 1:
+                        raise BaseException("Must be doubled")
+                except:
+                    msg.showerror("Некорректный ввод",
+                                  "Введите угол в правильной форме\n\
+Например: -47.4  ")
+                else:
+                    copy_figure(figure, previous_figure)
+                    
+                    for i in range(4):
+                        figure[i] = rotate_dot(figure[i], angle[0],
+                                               (new_dots[0], new_dots[1]))
+
+                    for i in range(len(figure[4])):
+                        figure[4][i] = rotate_dot(figure[4][i], angle[0],
+                                                  (new_dots[0], new_dots[1]))
+                        figure[5][i] = rotate_dot(figure[5][i], angle[0],
+                                                  (new_dots[0], new_dots[1]))
+                        figure[6][i] = rotate_dot(figure[6][i], angle[0],
+                                                  (new_dots[0], new_dots[1]))
+
+                    unit_1_task(figure)
+
+
+def shift_figure(figure, previous_figure, entr):
     string = entr.get()
 
     string = " ".join(string.split())
@@ -198,276 +293,201 @@ def rotate_figure(figure, entr):
 
     if len(string) == 0:
         msg.showerror("Некорректный ввод",
-                      "Не введено ни одной точки")
+                      "Не введены величины смещения")
     else:
         try:
             new_dots = [float(i) for i in string.split(" ")]
                     
-            if len(new_dots) % 2:
+            if len(new_dots) != 2:
                 raise BaseException("Must be doubled")
         except:
             msg.showerror("Некорректный ввод",
-                          "Введите координаты в правильной форме\n\
-Например: -4.4 10   6.76  -12.0")
+                          "Введите величины смещения в правильной форме\n\
+Например: -44.7 100")
         else:
-            for i in range(4):
-                figure[i] = rotate_dot(figure[i], new_dots[2], (new_dots[0], new_dots[1]))
-
-            unit_1_task(figure)
-
-
-def shift_figure(figure, entr):
-    string = entr.get()
-
-    string = " ".join(string.split())
-    string.strip()
-
-    if len(string) == 0:
-        msg.showerror("Некорректный ввод",
-                      "Не введено ни одной точки")
-    else:
-        try:
-            new_dots = [float(i) for i in string.split(" ")]
-                    
-            if len(new_dots) % 2:
-                raise BaseException("Must be doubled")
-        except:
-            msg.showerror("Некорректный ввод",
-                          "Введите координаты в правильной форме\n\
-Например: -4.4 10   6.76  -12.0")
-        else:
+            copy_figure(figure, previous_figure)
+            
             for i in range(4):
                 figure[i] = shift_dot(figure[i], new_dots[0], new_dots[1])
 
+            for i in range(len(figure[4])):
+                figure[4][i] = shift_dot(figure[4][i], new_dots[0], new_dots[1])
+                figure[5][i] = shift_dot(figure[5][i], new_dots[0], new_dots[1])
+                figure[6][i] = shift_dot(figure[6][i], new_dots[0], new_dots[1])
+
             unit_1_task(figure)
 
 
-def scale_figure(figure, entr):
-    string = entr.get()
-
+def scale_figure(figure, previous_figure, entr2, entr4):
+    string = entr2.get()
     string = " ".join(string.split())
     string.strip()
 
     if len(string) == 0:
         msg.showerror("Некорректный ввод",
-                      "Не введено ни одной точки")
+                      "Не введён центр вращения")
     else:
         try:
             new_dots = [float(i) for i in string.split(" ")]
                     
-            if len(new_dots) % 2:
+            if len(new_dots) != 2:
                 raise BaseException("Must be doubled")
         except:
             msg.showerror("Некорректный ввод",
                           "Введите координаты в правильной форме\n\
-Например: -4.4 10   6.76  -12.0")
+Например: -4.4  10")
         else:
-            for i in range(4):
-                figure[i] = scale_dot(figure[i], new_dots[2], new_dots[3], (new_dots[0], new_dots[1]))
+            ratio_string = entr4.get()
+            ratio_string = " ".join(ratio_string.split())
+            ratio_string.strip()
+    
+            if len(ratio_string) == 0:
+                msg.showerror("Некорректный ввод",
+                              "Не введёны кэффициенты смещения")
+            else:
+                try:
+                    ratio = [float(i) for i in ratio_string.split(" ")]
+                            
+                    if len(ratio) != 2:
+                        raise BaseException("Must be doubled")
+                except:
+                    msg.showerror("Некорректный ввод",
+                                  "Введите кэффициенты смещения в правильной \
+форме\nНапример: 1.5 3")
+                else:
+                    copy_figure(figure, previous_figure)
+                    
+                    for i in range(4):
+                        figure[i] = scale_dot(figure[i], ratio[0], ratio[1],
+                                              (new_dots[0], new_dots[1]))
 
-            unit_1_task(figure)
+                    for i in range(len(figure[4])):
+                        figure[4][i] = scale_dot(figure[4][i], ratio[0],
+                                                 ratio[1], (new_dots[0],
+                                                            new_dots[1]))
+                        figure[5][i] = scale_dot(figure[5][i], ratio[0],
+                                                 ratio[1], (new_dots[0],
+                                                            new_dots[1]))
+                        figure[6][i] = scale_dot(figure[6][i], ratio[0],
+                                                 ratio[1], (new_dots[0],
+                                                            new_dots[1]))
+
+                    unit_1_task(figure)
 
 
-def add_dot(event, dots, tree):
+def go_back(figure, back_figure, previous_figure):
+    temp = [0, 0, 0, 0, 0, 0, 0]
+    copy_figure(figure, temp)
+    copy_figure(back_figure, figure)
+    copy_figure(temp, previous_figure)
+    unit_1_task(figure)
+
+
+def add_dot(event, entr2):
     x = (event.x - 100) * real_width / (screen_width - 200) + min_x
     y = max_y - (event.y - 100) * real_height / (screen_height - 200)
-    
-    dots.append(tuple([x, y, len(dots) + 1]))
-    tree.insert('', tk.END, values=(len(dots), "{:.2f}".format(x),
-                                    "{:.2f}".format(y)))
 
-
-def table_update(dots, tree):
-    tree.delete(*tree.get_children())
-    
-    for i in range(len(dots)):
-        dots[i] = (dots[i][0], dots[i][1], i + 1)
-        tree.insert('', tk.END, values=(dots[i][2], dots[i][0], dots[i][1]))
-
-
-def delete_dot(dots, tree):
-    elem = tree.selection()
-    if not elem:
-        msg.showerror("Некорректный ввод",
-                      "Выберите точку в соответствующей таблице")
-        return
-    
-    if len(elem) > 1:
-        msg.showerror("Некорректный ввод", "Выберете только одну точку")
-        return
-    
-    ind = tree.index(elem)
-    dots.pop(ind)
-    table_update(dots, tree)
-
-
-def edit_dot(dots, tree, enter_window, entr, elem):
-    string = entr.get()
-
-    string = " ".join(string.split())
-    string.strip()
-    
-    if len(string) == 0:
-        msg.showerror("Некорректный ввод",
-                      "Координаты не введены")
-    else:
-        try:
-            new_coord = [float(i) for i in string.split(" ")]
-            
-            if not len(new_coord) == 2:
-                raise BaseException("Must be doubled")
-        except:
-            msg.showerror("Некорректный ввод",
-                          "Введите координаты в правильной форме\n\
-Например: -4.4    10")
-        else:
-            ind = tree.index(elem)
-            dots[ind] = (new_coord[0], new_coord[1], dots[ind][2])
-            table_update(dots, tree)
-
-    enter_window.destroy()
-
-
-def dot_handle(dots, tree, table_app):
-    elem = tree.selection()
-    if not elem:
-        msg.showerror("Некорректный ввод",
-                      "Выберите точку в соответствующей таблице")
-        return
-    
-    if len(elem) > 1:
-        msg.showerror("Некорректный ввод", "Выберете только одну точку")
-        return
-    
-    enter_window = tk.Toplevel(table_app)
-    enter_window.title("Изменение точки")
-    enter_window.geometry("500x170")
- 
-    app = tk.Frame(enter_window)
-    app.pack(padx=10, pady=10, fill=tk.BOTH)
- 
-    info_text = "Введите новые координаты точки (разделённые пробелами):"
-    lbl = tk.Label(app, text=info_text, font="Arial 14")
-    lbl.pack(padx=10, pady=10, side=tk.TOP)
- 
-    entr = tk.Entry(app, width=30, font="Arial 14")
-    entr.pack(padx=20, pady=10, side=tk.TOP)
- 
-    btn = tk.Button(app, text="Изменить точку", font="Arial 14",
-                    command=lambda : edit_dot(dots, tree, enter_window,
-                                              entr, elem))
-    btn.pack(padx=20, pady=10, side=tk.TOP)
- 
-    enter_window.mainloop()
+    entr2.delete(0, tk.END)
+    entr2.insert(0, "{:.2f} {:.2f}".format(x, y))
 
 
 def info():
-    msg.showinfo("Информация", "Компьютерная графика #1\n\
+    msg.showinfo("Информация", "Компьютерная графика #2\n\
 Разработчик: Алахов Андрей, ИУ7-42б\n\n\
-Эта программа находит такие 2 треугольника, что прямая линия, \
-проходящая через их тупые углы, образует наибольший угол с Ox\n\n\
-Для создания точек введите их координаты в следующем формате: X Y X Y ...\n\
-Также можно добавлять точки, кликая на холст: ЛКМ для добавления в 1-ое мн-во, \
-ПКМ для добавления во 2-ое мн-во\n\
-Для удаления или изменения точки выберите их в соответствующей таблице\n\n\
-Треугольник и точки из 1-го мн-ва голубые, из 2-го мн-ва красные\n\
-Результирующая линия зелёная")
+Эта программа позволяет осуществить перенос, поворот и масштабирование \
+исходного рисунка. Также доступны опции возврата к исходному и предыдущему \
+рисункам.\n\n\
+Для задания величин смещения введите их в следующем формате: X  Y\n\
+Для задания центра масштабирования и поворота введите его координаты в следующем формате: X  Y\n\
+Для задания коэффициентов масштабирования введите их в следующем формате: kx  ky\n\
+Для задания центра масштабирования и поворота можно сделать клик ПКМ на холст \
+в нужной точке\n\n\
+На рисунке для удобства отображены координаты центральной точки")
 
 
-def main_init(table_app):
-    figure = [(-100, 50), (100, 50), (100, -50), (-100, -50)]
+def main_init(table_app, canv):
+    circle = get_circle((0, 0), 25, "full")
+    left = get_circle((-100, 0), 50, "left")
+    right = get_circle((100, 0), 50, "right")
+    figure = [(-100, 50), (100, 50), (100, -50),
+              (-100, -50), circle, left, right]
     unit_1_task(figure)
+
+    previous_figure = [0, 0, 0, 0, 0, 0, 0]
+    copy_figure(figure, previous_figure)
+    
+    default_figure = [0, 0, 0, 0, 0, 0, 0]
+    copy_figure(figure, default_figure)
     
     table_app.grid()
 
-    info_text = "Введите координаты точек (разделённые пробелами):"
-    lbl = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl.grid(row = 0, column = 0, columnspan = 4)
+    info_text = "Введите величины смещения по X и Y:"
+    lbl1 = tk.Label(table_app, text=info_text, font="Arial 14")
+    lbl1.grid(row = 0, column = 0, columnspan = 3)
 
-    entr = tk.Entry(table_app, width=30, font="Arial 14")
-    entr.grid(row = 1, column = 0, columnspan = 4)
-    entr.insert(0, "80 40 -221 73 0 -48")
+    entr1 = tk.Entry(table_app, width=15, font="Arial 14")
+    entr1.grid(row = 0, column = 3)
+    entr1.insert(0, "80  -40")
+
+    info_text = "Введите координаты центра масштабирования или поворота:"
+    lbl2 = tk.Label(table_app, text=info_text, font="Arial 14")
+    lbl2.grid(row = 1, column = 0, columnspan = 3)
+
+    entr2 = tk.Entry(table_app, width=15, font="Arial 14")
+    entr2.grid(row = 1, column = 3)
+    entr2.insert(0, "0   0")
+    canv.bind("<Button-3>", lambda event : add_dot(event, entr2))
+
+    info_text = "Введите угол поворота (в градусах):"
+    lbl3 = tk.Label(table_app, text=info_text, font="Arial 14")
+    lbl3.grid(row = 2, column = 0, columnspan = 3)
+
+    entr3 = tk.Entry(table_app, width=15, font="Arial 14")
+    entr3.grid(row = 2, column = 3)
+    entr3.insert(0, "-45")
+
+    info_text = "Введите коэффиценты масштабирования по X и Y:"
+    lbl4 = tk.Label(table_app, text=info_text, font="Arial 14")
+    lbl4.grid(row = 3, column = 0, columnspan = 3)
+
+    entr4 = tk.Entry(table_app, width=15, font="Arial 14")
+    entr4.grid(row = 3, column = 3)
+    entr4.insert(0, "1.5 3")
 
     btn1 = tk.Button(table_app, font="Arial 14", text="Повернуть",
-                     bg="#00FFFF", foreground="black",
-                     command=lambda : rotate_figure(figure, entr))
-    btn1.grid(row = 2, column = 1, sticky = tk.E)
+                     bg="#00FFFF",
+                     command=lambda : rotate_figure(figure, previous_figure,
+                                                    entr2, entr3))
+    btn1.grid(row = 4, column = 0, sticky = tk.W + tk.E)
     
-    btn2 = tk.Button(table_app, font="Arial 14", text="Сместить",
-                     bg="#FF0000", foreground="black",
-                     command=lambda : shift_figure(figure, entr))
-    btn2.grid(row = 2, column = 2, sticky = tk.W)
+    btn2 = tk.Button(table_app, font="Arial 14", text="Перенести",
+                     bg="#00FFFF",
+                     command=lambda : shift_figure(figure, previous_figure,
+                                                   entr1))
+    btn2.grid(row = 4, column = 1, sticky = tk.W + tk.E)
 
     btn3 = tk.Button(table_app, font="Arial 14", text="Масштабировать",
-                     bg="#00FFFF", foreground="black",
-                     command=lambda : scale_figure(figure, entr))
-    btn3.grid(row = 2, column = 0, sticky = tk.E)
-    
-    btn4 = tk.Button(table_app, font="Arial 14", text="Удалить из 2-го мн-ва",
-                     bg="#FF0000", foreground="black",
-                     command=lambda : delete_dot(dots2, tree2))
-    btn4.grid(row = 2, column = 3, sticky = tk.W)
-
-    btn5 = tk.Button(table_app, font="Arial 14", text="Изменить точку из 1-го мн-ва",
-                     bg="#00FFFF", foreground="black",
-                     command=lambda : dot_handle(dots1, tree1, table_app))
-    btn5.grid(row = 3, column = 0, columnspan = 2, sticky = tk.E)
-    
-    btn6 = tk.Button(table_app, font="Arial 14", text="Изменить точку из 2-го мн-ва",
-                     bg="#FF0000", foreground="black",
-                     command=lambda : dot_handle(dots2, tree2, table_app))
-    btn6.grid(row = 3, column = 2, columnspan = 2, sticky = tk.W)
+                     bg="#00FFFF",
+                     command=lambda : scale_figure(figure, previous_figure,
+                                                   entr2, entr4))
+    btn3.grid(row = 4, column = 2, sticky = tk.W + tk.E)
 
     btn7 = tk.Button(table_app, font="Arial 14", text="Информация",
                      command=lambda : info())
-    btn7.grid(row = 5, column = 0, sticky = tk.E)
+    btn7.grid(row = 4, column = 3, rowspan = 2,
+              sticky = tk.W + tk.E + tk.N + tk.S)
 
-    btn8 = tk.Button(table_app, font="Arial 14", text="Результат",
-                     bg="#008000", foreground="black",
-                     command=lambda : unit_1_task(figure))
-    btn8.grid(row = 5, column = 1, columnspan = 2, sticky = tk.E + tk.W)
+    btn8 = tk.Button(table_app, font="Arial 14",
+                     text="Вывести исходное изображение", bg="#00FF00",
+                     command=lambda : go_back(figure, default_figure,
+                                              previous_figure))
+    btn8.grid(row = 5, column = 1, columnspan = 2, sticky = tk.W + tk.E)
     
-    btn9 = tk.Button(table_app, font="Arial 14", text="Очистить",
-                     command=lambda : delete_all(dots1, dots2, tree1, tree2))
-    btn9.grid(row = 5, column = 3, sticky = tk.W)
-
-    #Таблица
-    tree1 = ttk.Treeview(table_app, show="headings")
-    tree1.grid(row = 4, column = 0, columnspan = 2,
-               sticky = tk.W + tk.S + tk.E + tk.N)
-
-    #Привязка Scrollbar к таблице
-    vsb = ttk.Scrollbar(table_app, orient='vertical', command=tree1.yview)
-    vsb.grid(row = 4, column = 0, columnspan = 2, sticky=tk.S + tk.E + tk.N)
-    tree1.configure(yscrollcommand=vsb.set)
-
-    #Настройка колонок таблицы
-    tree1["columns"]=('1','2','3')
-    tree1.column('1', width=50)
-    tree1.column('2', width=50)
-    tree1.column('3', width=50)
-    tree1.heading('1',text='#',anchor=tk.W)
-    tree1.heading('2', text='X',anchor=tk.W)
-    tree1.heading('3', text='Y',anchor=tk.W)
-
-    #Таблица
-    tree2 = ttk.Treeview(table_app, show="headings")
-    tree2.grid(row = 4, column = 2, columnspan = 2,
-               sticky = tk.W + tk.S + tk.E + tk.N)
-
-    #Привязка Scrollbar к таблице
-    vsb = ttk.Scrollbar(table_app, orient='vertical', command=tree2.yview)
-    vsb.grid(row = 4, column = 2, columnspan = 2, sticky=tk.S + tk.E + tk.N)
-    tree2.configure(yscrollcommand=vsb.set)
-
-    #Настройка колонок таблицы
-    tree2["columns"]=('1','2','3')
-    tree2.column('1', width=50)
-    tree2.column('2', width=50)
-    tree2.column('3', width=50)
-    tree2.heading('1',text='№',anchor=tk.W)
-    tree2.heading('2', text='X',anchor=tk.W)
-    tree2.heading('3', text='Y',anchor=tk.W)
+    btn9 = tk.Button(table_app, font="Arial 14", text="Шаг назад",
+                     bg = "#00FF00",
+                     command=lambda : go_back(figure, previous_figure,
+                                              previous_figure))
+    btn9.grid(row = 5, column = 0, sticky = tk.W + tk.E)
 
 
 if __name__ == "__main__":
@@ -475,7 +495,7 @@ if __name__ == "__main__":
     table_app = tk.Frame(table_root)
     table_app.pack()
     table_root.title("Основное меню")
-    table_root.geometry((str(855) + 'x' + str(400)))
+    table_root.geometry((str(713) + 'x' + str(190)))
 
     canv_root = tk.Tk()
     canv_root.title("Компьютерная графика №2")
@@ -487,7 +507,7 @@ if __name__ == "__main__":
 
     canv.pack(side=tk.BOTTOM)
 
-    main_init(table_app)
+    main_init(table_app, canv)
 
     table_root.mainloop()
     canv_root.mainloop()
