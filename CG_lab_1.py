@@ -24,24 +24,38 @@ def delete_all(dots1, dots2, tree1, tree2):
         text_root.destroy()
     except:
         pass
+
+
+def get_len(dot1, dot2):
+    return np.sqrt((dot1[0] - dot2[0]) ** 2 + (dot1[1] - dot2[1]) ** 2)
  
  
 def stupid_check(dot1, dot2, dot3):
-    len1 = (dot1[0] - dot2[0]) ** 2 + (dot1[1] - dot2[1]) ** 2
-    len2 = (dot3[0] - dot2[0]) ** 2 + (dot3[1] - dot2[1]) ** 2
-    len3 = (dot1[0] - dot3[0]) ** 2 + (dot1[1] - dot3[1]) ** 2
+    len1 = get_len(dot1, dot2) ** 2
+    len2 = get_len(dot2, dot3) ** 2
+    len3 = get_len(dot3, dot1) ** 2
 
-    if np.sqrt(len1) + np.sqrt(len2) <= np.sqrt(len3) or \
-       np.sqrt(len3) + np.sqrt(len2) <= np.sqrt(len1) or \
-       np.sqrt(len1) + np.sqrt(len3) <= np.sqrt(len2):
+    if not exist_check(dot1, dot2, dot3):
         return 0
-    if len1 + len2 < len3:
+    if (len1 + len2 - len3) < -0.0000001:
         return dot2, dot1, dot3
-    if len1 + len3 < len2:
+    if (len1 + len3 - len2) < -0.0000001:
         return dot1, dot2, dot3
-    if len3 + len2 < len1:
+    if (len3 + len2 - len1) < -0.0000001:
         return dot3, dot1, dot2
     return 0
+
+
+def exist_check(dot1, dot2, dot3):
+    len1 = get_len(dot1, dot2)
+    len2 = get_len(dot2, dot3)
+    len3 = get_len(dot3, dot1)
+    
+    if len1 + len2 <= len3 or \
+       len3 + len2 <= len1 or \
+       len1 + len3 <= len2:
+        return 0
+    return 1
 
 
 def find_angle(triangle1, triangle2):
@@ -137,24 +151,33 @@ def unit_1_task(dots1, dots2, tree1, tree2):
     max_angle = -3
     stupid_triangles = []
     result = ""
+    existance = 0
 
-    for i in range(len(dots1)):
-        for j in range(i+1, len(dots1)):
+    for i in range(len(dots1) - 2):
+        for j in range(i+1, len(dots1) - 1):
             for k in range(j+1, len(dots1)):
                 dot_1, dot_2, dot_3 = dots1[i], dots1[j], dots1[k]
 
                 cur_triangle = stupid_check(dot_1, dot_2, dot_3)
                 if cur_triangle:
                     stupid_triangles.append(cur_triangle)
-
+                else:
+                    existance += exist_check(dot_1, dot_2, dot_3)
+    
     if not len(stupid_triangles):
+        if not existance:
+            msg.showinfo("Некорректный ввод",
+                "Все треугольники в первом мн-ве вырожденные")
+            return
+    
         msg.showinfo("Некорректный ввод",
             "В первом мн-ве недостаточно\nтупых треугольников")
         return
 
+    existance = 0
     flag = 0
-    for i in range(len(dots2)):
-        for j in range(i+1, len(dots2)):
+    for i in range(len(dots2) - 2):
+        for j in range(i+1, len(dots2) - 1):
             for k in range(j+1, len(dots2)):
                 dot_1, dot_2, dot_3 = dots2[i], dots2[j], dots2[k]
                 
@@ -169,8 +192,15 @@ def unit_1_task(dots1, dots2, tree1, tree2):
                             if cur_angle > max_angle:
                                 max_angle = cur_angle
                                 result_triangles = triangle, cur_triangle
+                else:
+                    existance += exist_check(dot_1, dot_2, dot_3)
 
     if not (len(result_triangles) or flag):
+        if not existance:
+            msg.showinfo("Некорректный ввод",
+                "Все треугольники во втором мн-ве вырожденные")
+            return
+    
         msg.showerror("Некорректный ввод",
             "Во втором мн-ве недостаточно\nтупых треугольников")
         return
