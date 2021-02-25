@@ -402,7 +402,7 @@ def dot_handle(dots, tree, table_app):
     
     enter_window = tk.Toplevel(table_app)
     enter_window.title("Изменение точки")
-    enter_window.geometry("500x170")
+    enter_window.geometry("600x170")
  
     app = tk.Frame(enter_window)
     app.pack(padx=10, pady=10, fill=tk.BOTH)

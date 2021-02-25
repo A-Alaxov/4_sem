@@ -231,7 +231,8 @@ def copy_figure(figure, back_figure):
     back_figure[5] = figure[5][:]
     back_figure[6] = figure[6][:]
 
-def rotate_figure(figure, previous_figure, entr2, entr3):
+
+def rotate_figure(figure, moves, entr2, entr3):
     string = entr2.get()
     string = " ".join(string.split())
     string.strip()
@@ -268,7 +269,7 @@ def rotate_figure(figure, previous_figure, entr2, entr3):
                                   "Введите угол в правильной форме\n\
 Например: -47.4  ")
                 else:
-                    copy_figure(figure, previous_figure)
+                    moves.append(("rotate", -angle[0], (new_dots[0], new_dots[1])))
                     
                     for i in range(4):
                         figure[i] = rotate_dot(figure[i], angle[0],
@@ -285,7 +286,7 @@ def rotate_figure(figure, previous_figure, entr2, entr3):
                     unit_1_task(figure)
 
 
-def shift_figure(figure, previous_figure, entr):
+def shift_figure(figure, moves, entr):
     string = entr.get()
 
     string = " ".join(string.split())
@@ -305,7 +306,7 @@ def shift_figure(figure, previous_figure, entr):
                           "Введите величины смещения в правильной форме\n\
 Например: -44.7 100")
         else:
-            copy_figure(figure, previous_figure)
+            moves.append(("shift", -new_dots[0], -new_dots[1]))
             
             for i in range(4):
                 figure[i] = shift_dot(figure[i], new_dots[0], new_dots[1])
@@ -318,7 +319,7 @@ def shift_figure(figure, previous_figure, entr):
             unit_1_task(figure)
 
 
-def scale_figure(figure, previous_figure, entr2, entr4):
+def scale_figure(figure, moves, entr2, entr4):
     string = entr2.get()
     string = " ".join(string.split())
     string.strip()
@@ -355,7 +356,12 @@ def scale_figure(figure, previous_figure, entr2, entr4):
                                   "Введите кэффициенты смещения в правильной \
 форме\nНапример: 1.5 3")
                 else:
-                    copy_figure(figure, previous_figure)
+                    if np.fabs(ratio[0]) < 0.0001 or np.fabs(ratio[1]) < 0.0001:
+                        previous = [0, 0, 0, 0, 0, 0, 0]
+                        copy_figure(figure, previous)
+                        moves.append(("go_back", previous))
+                    else:
+                        moves.append(("scale", 1 / ratio[0], 1 / ratio[1], (new_dots[0], new_dots[1])))
                     
                     for i in range(4):
                         figure[i] = scale_dot(figure[i], ratio[0], ratio[1],
@@ -375,12 +381,71 @@ def scale_figure(figure, previous_figure, entr2, entr4):
                     unit_1_task(figure)
 
 
-def go_back(figure, back_figure, previous_figure):
-    temp = [0, 0, 0, 0, 0, 0, 0]
-    copy_figure(figure, temp)
+def go_back(figure, back_figure):
     copy_figure(back_figure, figure)
-    copy_figure(temp, previous_figure)
     unit_1_task(figure)
+
+
+def go_to_default(figure, back_figure, moves):
+    previous = [0, 0, 0, 0, 0, 0, 0]
+    copy_figure(figure, previous)
+    moves.append(("go_back", previous))
+    copy_figure(back_figure, figure)
+    unit_1_task(figure)
+
+
+def move_back(figure, moves):
+    last_move = moves[len(moves) - 1]
+    if len(moves) > 1:
+        moves.pop(len(moves) - 1)
+
+    if last_move[0] == "rotate":
+        for i in range(4):
+            figure[i] = rotate_dot(figure[i], last_move[1],
+                                   last_move[2])
+
+        for i in range(len(figure[4])):
+            figure[4][i] = rotate_dot(figure[4][i], last_move[1],
+                                      last_move[2])
+            figure[5][i] = rotate_dot(figure[5][i], last_move[1],
+                                      last_move[2])
+            figure[6][i] = rotate_dot(figure[6][i], last_move[1],
+                                      last_move[2])
+
+        unit_1_task(figure)
+
+    if last_move[0] == "scale":
+        for i in range(4):
+            figure[i] = scale_dot(figure[i], last_move[1],
+                                   last_move[2], last_move[3])
+
+        for i in range(len(figure[4])):
+            figure[4][i] = scale_dot(figure[4][i], last_move[1],
+                                   last_move[2], last_move[3])
+            figure[5][i] = scale_dot(figure[5][i], last_move[1],
+                                   last_move[2], last_move[3])
+            figure[6][i] = scale_dot(figure[6][i], last_move[1],
+                                   last_move[2], last_move[3])
+
+        unit_1_task(figure)
+
+    if last_move[0] == "shift":
+        for i in range(4):
+            figure[i] = shift_dot(figure[i], last_move[1],
+                                   last_move[2])
+
+        for i in range(len(figure[4])):
+            figure[4][i] = shift_dot(figure[4][i], last_move[1],
+                                   last_move[2])
+            figure[5][i] = shift_dot(figure[5][i], last_move[1],
+                                   last_move[2])
+            figure[6][i] = shift_dot(figure[6][i], last_move[1],
+                                   last_move[2])
+
+        unit_1_task(figure)
+
+    if last_move[0] == "go_back":
+        go_back(figure, last_move[1])
 
 
 def add_dot(event, entr2):
@@ -414,12 +479,12 @@ def main_init(table_app, canv):
     figure = [(-100, 50), (100, 50), (100, -50),
               (-100, -50), circle, left, right]
     unit_1_task(figure)
-
-    previous_figure = [0, 0, 0, 0, 0, 0, 0]
-    copy_figure(figure, previous_figure)
     
     default_figure = [0, 0, 0, 0, 0, 0, 0]
     copy_figure(figure, default_figure)
+
+    moves = []
+    moves.append(("go_back", default_figure))
     
     table_app.grid()
 
@@ -458,19 +523,19 @@ def main_init(table_app, canv):
 
     btn1 = tk.Button(table_app, font="Arial 14", text="Повернуть",
                      bg="#00FFFF",
-                     command=lambda : rotate_figure(figure, previous_figure,
+                     command=lambda : rotate_figure(figure, moves,
                                                     entr2, entr3))
     btn1.grid(row = 4, column = 0, sticky = tk.W + tk.E)
     
     btn2 = tk.Button(table_app, font="Arial 14", text="Перенести",
                      bg="#00FFFF",
-                     command=lambda : shift_figure(figure, previous_figure,
+                     command=lambda : shift_figure(figure, moves,
                                                    entr1))
     btn2.grid(row = 4, column = 1, sticky = tk.W + tk.E)
 
     btn3 = tk.Button(table_app, font="Arial 14", text="Масштабировать",
                      bg="#00FFFF",
-                     command=lambda : scale_figure(figure, previous_figure,
+                     command=lambda : scale_figure(figure, moves,
                                                    entr2, entr4))
     btn3.grid(row = 4, column = 2, sticky = tk.W + tk.E)
 
@@ -481,14 +546,12 @@ def main_init(table_app, canv):
 
     btn8 = tk.Button(table_app, font="Arial 14",
                      text="Вывести исходное изображение", bg="#00FF00",
-                     command=lambda : go_back(figure, default_figure,
-                                              previous_figure))
+                     command=lambda : go_to_default(figure, default_figure, moves))
     btn8.grid(row = 5, column = 1, columnspan = 2, sticky = tk.W + tk.E)
     
     btn9 = tk.Button(table_app, font="Arial 14", text="Шаг назад",
                      bg = "#00FF00",
-                     command=lambda : go_back(figure, previous_figure,
-                                              previous_figure))
+                     command=lambda : move_back(figure, moves))
     btn9.grid(row = 5, column = 0, sticky = tk.W + tk.E)
 
 
