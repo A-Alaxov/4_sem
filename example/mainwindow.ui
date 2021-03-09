@@ -6,33 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>648</height>
+    <width>850</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>520</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>800</width>
+      <width>830</width>
       <height>500</height>
      </rect>
     </property>
@@ -40,8 +27,8 @@
    <widget class="QPushButton" name="shift_button">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>520</y>
+      <x>130</x>
+      <y>550</y>
       <width>231</width>
       <height>23</height>
      </rect>
@@ -53,8 +40,8 @@
    <widget class="QLineEdit" name="x_shift_input">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>550</y>
+      <x>130</x>
+      <y>580</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -66,8 +53,8 @@
    <widget class="QLineEdit" name="y_shift_input">
     <property name="geometry">
      <rect>
-      <x>200</x>
-      <y>550</y>
+      <x>210</x>
+      <y>580</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -76,8 +63,8 @@
    <widget class="QLineEdit" name="z_shift_input">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>550</y>
+      <x>290</x>
+      <y>580</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -86,7 +73,7 @@
    <widget class="QPushButton" name="rotate_button">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>370</x>
       <y>550</y>
       <width>231</width>
       <height>23</height>
@@ -99,7 +86,7 @@
    <widget class="QLineEdit" name="yz_angle_input">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>450</x>
       <y>580</y>
       <width>71</width>
       <height>20</height>
@@ -109,7 +96,7 @@
    <widget class="QLineEdit" name="y_centre_input">
     <property name="geometry">
      <rect>
-      <x>560</x>
+      <x>570</x>
       <y>520</y>
       <width>71</width>
       <height>20</height>
@@ -119,7 +106,7 @@
    <widget class="QLineEdit" name="z_centre_input">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>650</x>
       <y>520</y>
       <width>71</width>
       <height>20</height>
@@ -129,7 +116,7 @@
    <widget class="QPushButton" name="scale_button">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>610</x>
       <y>550</y>
       <width>231</width>
       <height>23</height>
@@ -142,7 +129,7 @@
    <widget class="QLineEdit" name="x_centre_input">
     <property name="geometry">
      <rect>
-      <x>480</x>
+      <x>490</x>
       <y>520</y>
       <width>71</width>
       <height>20</height>
@@ -155,7 +142,7 @@
    <widget class="QLineEdit" name="y_scale_input">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>690</x>
       <y>580</y>
       <width>71</width>
       <height>20</height>
@@ -165,7 +152,7 @@
    <widget class="QLineEdit" name="x_scale_input">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>610</x>
       <y>580</y>
       <width>71</width>
       <height>20</height>
@@ -178,7 +165,7 @@
    <widget class="QLineEdit" name="z_scale_input">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>770</x>
       <y>580</y>
       <width>71</width>
       <height>20</height>
@@ -188,7 +175,7 @@
    <widget class="QLineEdit" name="xy_angle_input">
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>370</x>
       <y>580</y>
       <width>71</width>
       <height>20</height>
@@ -201,9 +188,45 @@
    <widget class="QLineEdit" name="zx_angle_input">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>530</x>
       <y>580</y>
       <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="import_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>520</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Import from file</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="export_button">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>580</y>
+      <width>111</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Export to file</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="file_name_input">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>550</y>
+      <width>111</width>
       <height>20</height>
      </rect>
     </property>
@@ -214,7 +237,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>975</width>
+     <width>850</width>
      <height>21</height>
     </rect>
    </property>

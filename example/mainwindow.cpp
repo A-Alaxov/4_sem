@@ -1,9 +1,11 @@
 #include "mainwindow.h"
 #include "main_func.h"
+#include "errors.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QPainter>
 #include <QVector3D>
+#include <QMessageBox>
 #include <chrono>
 #include <ctime>
 #include <math.h>
@@ -29,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->xy_angle_input->setPlaceholderText(QString("xy flat angle"));
     ui->yz_angle_input->setPlaceholderText(QString("yz flat angle"));
     ui->zx_angle_input->setPlaceholderText(QString("zx flat angle"));
+    ui->file_name_input->setPlaceholderText(QString("file name"));
 
     scene = new QGraphicsScene();
 }
@@ -37,14 +40,6 @@ MainWindow::~MainWindow() {
     delete scene;
 
     delete ui;
-}
-
-void MainWindow::on_pushButton_clicked() {
-    parametrs par;
-
-    main_func(SHOW, par);
-
-    draw();
 }
 
 void MainWindow::on_shift_button_clicked() {
@@ -91,28 +86,77 @@ void MainWindow::on_scale_button_clicked() {
     draw();
 }
 
+void MainWindow::on_import_button_clicked() {
+    int rc = OK;
+    parametrs file;
+    file.f = fopen(ui->file_name_input->text().toStdString().c_str(), "r");
+
+    if (!file.f) {
+        char str[16] = "Wrong file name";
+        print_message(str);
+    }
+    else {
+        rc = main_func(IMPORT, file);
+
+        if (rc == WRONG_DATA) {
+            char str[16] = "Wrong file data";
+            print_message(str);
+        }
+        else if (rc == EMPTY_FILE) {
+            char str[16] = "Empty file";
+            print_message(str);
+        }
+        else
+            draw();
+
+        fclose(file.f);
+    }
+}
+
+void MainWindow::on_export_button_clicked()
+{
+    parametrs file;
+    file.f = fopen(ui->file_name_input->text().toStdString().c_str(), "w");
+
+    if (!file.f) {
+        char str[16] = "Wrong file name";
+        print_message(str);
+    }
+    else {
+        main_func(EXPORT, file);
+
+        fclose(file.f);
+    }
+}
+
 void MainWindow::draw() {
     ui->graphicsView->items().clear();
-    QImage image = QImage(600, 600, QImage::Format_RGB32);
+    QImage image = QImage(820, 490, QImage::Format_RGB32);
     QPainter p(&image);
 
     p.setBrush(QColor(0, 0, 0));
     p.setPen(QColor(200, 0, 0));
 
-    parametrs edge;
+    parametrs par;
     int rc = OK;
 
     for (size_t i = 0; rc == OK; i++) {
-        edge.edge.number = i;
-        rc = main_func(GET_EDGE, edge);
+        par.edge.number = i;
+        rc = main_func(GET_EDGE, par);
 
         if (!rc)
-            p.drawLine(edge.edge.edge.dot1.x, edge.edge.edge.dot1.y, edge.edge.edge.dot2.x, edge.edge.edge.dot2.y);
+            p.drawLine(par.edge.line.dot1.x, par.edge.line.dot1.y, par.edge.line.dot2.x, par.edge.line.dot2.y);
     }
 
     QPixmap pixmap = QPixmap::fromImage(image);
     scene->addPixmap(pixmap);
     ui->graphicsView->setScene(scene);
+}
+
+void MainWindow::print_message(char *str) {
+    QMessageBox msg;
+    msg.setText(QString(str));
+    msg.exec();
 }
 
 void MainWindow::on_MainWindow_destroyed() {}

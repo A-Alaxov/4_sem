@@ -10,12 +10,16 @@ CONFIG += c++11
 
 SOURCES += \
     dot_funcs.cpp \
+    figure_funcs.cpp \
     main.cpp \
     main_func.cpp \
     mainwindow.cpp
 
 HEADERS += \
+    data_types.h \
     dot_funcs.h \
+    errors.h \
+    figure_funcs.h \
     main_func.h \
     mainwindow.h
 

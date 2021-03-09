@@ -28,10 +28,15 @@ private slots:
 
   void on_rotate_button_clicked();
 
+  void on_import_button_clicked();
+
+  void on_export_button_clicked();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;
 
   void draw();
+  void print_message(char str[]);
 };
 #endif // MAINWINDOW_H
