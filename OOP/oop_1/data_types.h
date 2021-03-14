@@ -1,42 +1,47 @@
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 
-typedef struct {
+struct dot {
     double x;
     double y;
     double z;
-} dot;
+};
 
-typedef struct {
-    dot dot1;
-    dot dot2;
-} line;
+struct line{
+    int dot1;
+    int dot2;
+};
 
-typedef struct {
+struct shift_params {
     double x_shift;
     double y_shift;
     double z_shift;
-} shift_params;
+};
 
-typedef struct {
+struct rotate_params {
     dot centre;
 
     double xy_angle;
     double yz_angle;
     double zx_angle;
-} rotate_params;
+};
 
-typedef struct {
-    dot centre;
-
+struct scale_coefs {
     double x_scale;
     double y_scale;
     double z_scale;
-} scale_params;
+};
 
-typedef struct {
-    line line;
+struct scale_params {
+    dot centre;
+    scale_coefs coefs;
+};
+
+struct screen_edge {
+    dot dot1;
+    dot dot2;
+
     int number;
-} changing_edge;
+};
 
 #endif // DATA_TYPES_H

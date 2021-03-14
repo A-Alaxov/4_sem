@@ -49,7 +49,7 @@ void MainWindow::on_shift_button_clicked() {
     par.shift.y_shift = ui->y_shift_input->text().toDouble();
     par.shift.z_shift = ui->z_shift_input->text().toDouble();
 
-    main_func(SHIFT, par);
+    main_func(par, SHIFT);
 
     draw();
 }
@@ -65,7 +65,7 @@ void MainWindow::on_rotate_button_clicked() {
     par.rotate.yz_angle = ui->yz_angle_input->text().toDouble();
     par.rotate.zx_angle = ui->zx_angle_input->text().toDouble();
 
-    main_func(ROTATE, par);
+    main_func(par, ROTATE);
 
     draw();
 }
@@ -77,11 +77,11 @@ void MainWindow::on_scale_button_clicked() {
     par.scale.centre.y = ui->y_centre_input->text().toDouble();
     par.scale.centre.z = ui->z_centre_input->text().toDouble();
 
-    par.scale.x_scale = ui->x_scale_input->text().toDouble();
-    par.scale.y_scale = ui->y_scale_input->text().toDouble();
-    par.scale.z_scale = ui->z_scale_input->text().toDouble();
+    par.scale.coefs.x_scale = ui->x_scale_input->text().toDouble();
+    par.scale.coefs.y_scale = ui->y_scale_input->text().toDouble();
+    par.scale.coefs.z_scale = ui->z_scale_input->text().toDouble();
 
-    main_func(SCALE, par);
+    main_func(par, SCALE);
 
     draw();
 }
@@ -96,14 +96,18 @@ void MainWindow::on_import_button_clicked() {
         print_message(str);
     }
     else {
-        rc = main_func(IMPORT, file);
+        rc = main_func(file, IMPORT);
 
         if (rc == WRONG_DATA) {
             char str[16] = "Wrong file data";
             print_message(str);
         }
-        else if (rc == EMPTY_FILE) {
+        else if (rc == EMPTY_FIGURE) {
             char str[16] = "Empty file";
+            print_message(str);
+        }
+        else if (rc == MEM_ERR) {
+            char str[16] = "Memory error";
             print_message(str);
         }
         else
@@ -123,7 +127,7 @@ void MainWindow::on_export_button_clicked()
         print_message(str);
     }
     else {
-        main_func(EXPORT, file);
+        main_func(file, EXPORT);
 
         fclose(file.f);
     }
@@ -132,6 +136,7 @@ void MainWindow::on_export_button_clicked()
 void MainWindow::draw() {
     ui->graphicsView->items().clear();
     QImage image = QImage(820, 490, QImage::Format_RGB32);
+    image.fill(0);
     QPainter p(&image);
 
     p.setBrush(QColor(0, 0, 0));
@@ -140,12 +145,13 @@ void MainWindow::draw() {
     parametrs par;
     int rc = OK;
 
-    for (size_t i = 0; rc == OK; i++) {
+    for (size_t i = 0; !rc; i++) {
         par.edge.number = i;
-        rc = main_func(GET_EDGE, par);
+        rc = main_func(par, GET_EDGE);
 
         if (!rc)
-            p.drawLine(par.edge.line.dot1.x, par.edge.line.dot1.y, par.edge.line.dot2.x, par.edge.line.dot2.y);
+            p.drawLine(par.edge.dot1.x, par.edge.dot1.y,
+                       par.edge.dot2.x, par.edge.dot2.y);
     }
 
     QPixmap pixmap = QPixmap::fromImage(image);

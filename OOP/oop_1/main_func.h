@@ -4,23 +4,23 @@
 #include <stdio.h>
 #include "data_types.h"
 
-typedef enum {
+enum operations{
     SHIFT,
     ROTATE,
     SCALE,
     GET_EDGE,
     IMPORT,
     EXPORT
-} operations;
+};
 
-typedef union {
+union parametrs{
     shift_params shift;
     rotate_params rotate;
     scale_params scale;
-    changing_edge edge;
+    screen_edge edge;
     FILE *f;
-} parametrs;
+};
 
-int main_func(operations func, parametrs &params);
+int main_func(parametrs &params, operations func);
 
 #endif // MAIN_FUNC_H
