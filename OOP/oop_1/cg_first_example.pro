@@ -19,7 +19,6 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    data_types.h \
     dot.h \
     dots_info.h \
     edge.h \

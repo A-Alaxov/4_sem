@@ -1,8 +1,9 @@
 #ifndef MAIN_FUNC_H
 #define MAIN_FUNC_H
 
-#include <stdio.h>
-#include "data_types.h"
+#include "dot.h"
+#include "dots_info.h"
+#include "figure.h"
 
 enum operations{
     SHIFT,
@@ -10,7 +11,8 @@ enum operations{
     SCALE,
     GET_EDGE,
     IMPORT,
-    EXPORT
+    EXPORT,
+    FREE
 };
 
 union parametrs{
@@ -18,7 +20,7 @@ union parametrs{
     rotate_params rotate;
     scale_params scale;
     screen_edge edge;
-    FILE *f;
+    char *file_name;
 };
 
 int entry(parametrs &params, operations func);

@@ -9,6 +9,14 @@ bool check_line(line &edge, int &count) {
         return true;
 }
 
+int import_edge(line &edge, FILE *f) {
+    if (fscanf(f, "%d", &edge.dot1) != 1)
+        return WRONG_DATA;
+    if (fscanf(f, "%d", &edge.dot2) != 1)
+        return WRONG_DATA;
+    return OK;
+}
+
 int export_edge(FILE *f, line &edge) {
     fprintf(f, "%d %d\n", edge.dot1, edge.dot2);
 

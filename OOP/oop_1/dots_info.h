@@ -1,8 +1,26 @@
 #ifndef DOTS_INFO_H
 #define DOTS_INFO_H
 
-#include "data_types.h"
+#include "dot.h"
 #include <stdio.h>
+
+struct dots_info {
+    dot *dots;
+    int count;
+};
+
+struct rotate_params {
+    dot centre;
+
+    double xy_angle;
+    double yz_angle;
+    double zx_angle;
+};
+
+struct scale_params {
+    dot centre;
+    scale_coefs coefs;
+};
 
 dots_info init_dots();
 
@@ -14,7 +32,7 @@ int rotate_all_dots(dots_info &fig_dots, rotate_params &param);
 
 int scale_all_dots(dots_info &fig_dots, scale_params &param);
 
-int get_edge_dots(screen_edge &scr_edge, line &cur_edge, dots_info &fig_dots);
+int get_edge_dots(dot &scr_dot, int &number, dots_info &fig_dots);
 
 int import_all_dots(dots_info &fig_dots, FILE *f);
 

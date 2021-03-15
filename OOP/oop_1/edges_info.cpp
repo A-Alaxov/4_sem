@@ -40,6 +40,29 @@ int get_cur_line(line &cur_edge, int &number, edges_info &fig_edges) {
     return OK;
 }
 
+int import_all_edges(edges_info &fig_edges, FILE *f) {
+    int rc = OK;
+    int i = 0;
+
+    if (fscanf(f, "%d", &(fig_edges.count)) != 1)
+        return WRONG_DATA;
+
+    fig_edges.edges = (line*)malloc(fig_edges.count * sizeof(line));
+    if (!fig_edges.edges)
+        return MEM_ERR;
+
+    while ((!rc) && (i < fig_edges.count)) {
+        rc = import_edge(fig_edges.edges[i], f);
+
+        i++;
+    }
+
+    if (rc)
+        free_edges(fig_edges);
+
+    return rc;
+}
+
 int export_all_edges(FILE *f, edges_info &fig_edges) {
     if (!fig_edges.edges)
         return NO_DATA;

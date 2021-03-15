@@ -40,6 +40,9 @@ MainWindow::~MainWindow() {
     delete scene;
 
     delete ui;
+
+    parametrs par;
+    entry(par, FREE);
 }
 
 void MainWindow::on_shift_button_clicked() {
@@ -89,47 +92,41 @@ void MainWindow::on_scale_button_clicked() {
 void MainWindow::on_import_button_clicked() {
     int rc = OK;
     parametrs file;
-    file.f = fopen(ui->file_name_input->text().toStdString().c_str(), "r");
+    file.file_name = strdup(ui->file_name_input->text().toStdString().c_str());
 
-    if (!file.f) {
+    rc = entry(file, IMPORT);
+
+    if (rc == WRONG_DATA) {
+        char str[16] = "Wrong file data";
+        print_message(str);
+    }
+    else if (rc == EMPTY_FIGURE) {
+        char str[16] = "Empty file";
+        print_message(str);
+    }
+    else if (rc == MEM_ERR) {
+        char str[16] = "Memory error";
+        print_message(str);
+    }
+    else if (rc == WRONG_FILE_NAME) {
         char str[16] = "Wrong file name";
         print_message(str);
     }
-    else {
-        rc = entry(file, IMPORT);
-
-        if (rc == WRONG_DATA) {
-            char str[16] = "Wrong file data";
-            print_message(str);
-        }
-        else if (rc == EMPTY_FIGURE) {
-            char str[16] = "Empty file";
-            print_message(str);
-        }
-        else if (rc == MEM_ERR) {
-            char str[16] = "Memory error";
-            print_message(str);
-        }
-        else
-            draw();
-
-        fclose(file.f);
-    }
+    else
+        draw();
 }
 
 void MainWindow::on_export_button_clicked()
 {
+    int rc = OK;
     parametrs file;
-    file.f = fopen(ui->file_name_input->text().toStdString().c_str(), "w");
+    file.file_name = strdup(ui->file_name_input->text().toStdString().c_str());
 
-    if (!file.f) {
+    rc = entry(file, EXPORT);
+
+    if (rc == WRONG_FILE_NAME) {
         char str[16] = "Wrong file name";
         print_message(str);
-    }
-    else {
-        entry(file, EXPORT);
-
-        fclose(file.f);
     }
 }
 

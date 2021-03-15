@@ -8,5 +8,6 @@
 #define MEM_ERR -4
 #define NO_DATA -5
 #define INCORRECT_FIG -6
+#define WRONG_FILE_NAME -7
 
 #endif // ERRORS_H

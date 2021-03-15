@@ -63,14 +63,20 @@ int get_screen_edge(screen_edge &scr_edge, fig_info &figure) {
     int rc = get_cur_line(cur_line, scr_edge.number, figure.fig_edges);
 
     if (!rc)
-        rc = get_edge_dots(scr_edge, cur_line, figure.fig_dots);
+        rc = get_edge_dots(scr_edge.dot1, cur_line.dot1, figure.fig_dots);
+    if (!rc)
+        rc = get_edge_dots(scr_edge.dot2, cur_line.dot2, figure.fig_dots);
 
     return rc;
 }
 
-int import_fig(fig_info &figure, FILE *f) {
+int import_fig(fig_info &figure, char *file_name) {
     int rc = OK;
-    int len, i = 0;
+
+    FILE *f = fopen(file_name, "r");
+
+    if (!f)
+        return WRONG_FILE_NAME;
 
     fig_info tmp_figure = init_fig();
 
@@ -96,63 +102,25 @@ int import_fig(fig_info &figure, FILE *f) {
         }
     }
 
-    if (fscanf(f, "%d", &(tmp_edges.dots_count)) != 1)
-        return WRONG_DATA;
-
-    tmp_edges.fig_dots = (dot*)malloc(tmp_edges.dots_count * sizeof(dot));
-    if (!tmp_edges.fig_dots)
-        return MEM_ERR;
-
-    while ((!rc) && (i < tmp_edges.dots_count)) {
-        rc = import_dot(edges.fig_dots[i], f);
-
-        i++;
-    }
-
-    if (!rc) {
-        if (fscanf(f, "%d", &len) != 1)
-            rc = WRONG_DATA;
-        else {
-            edges.fig_edges = (line*)malloc(len * sizeof(line));
-            if (!edges.fig_edges)
-                rc = MEM_ERR;
-            else {
-                edges.edges_count = len;
-
-                i = 0;
-                while ((!rc) && (i < len)) {
-                    rc = import_edge(edges.fig_edges[i], f);
-
-                    i++;
-                }
-
-                if ((feof(f)) && (i == len))
-                    rc = OK;
-                if ((!edges.dots_count) || (!edges.edges_count))
-                    rc = EMPTY_FIGURE;
-                if (rc) {
-                    free(edges.fig_edges);
-                    edges.fig_edges = NULL;
-                }
-            }
-        }
-    }
-
-    if (rc) {
-        free(edges.fig_dots);
-        edges.fig_dots = NULL;
-    }
+    fclose(f);
 
     return rc;
 }
 
-int export_fig(FILE *f, fig_info &figure) {
+int export_fig(char *file_name, fig_info &figure) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
+
+    FILE *f = fopen(file_name, "w");
+
+    if (!f)
+        return WRONG_FILE_NAME;
 
     int rc = export_all_dots(f, figure.fig_dots);
 
     rc = export_all_edges(f, figure.fig_edges);
+
+    fclose(f);
 
     return rc;
 }
