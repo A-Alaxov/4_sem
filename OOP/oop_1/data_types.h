@@ -7,9 +7,19 @@ struct dot {
     double z;
 };
 
+struct dots_info {
+    dot *dots;
+    int count;
+};
+
 struct line{
     int dot1;
     int dot2;
+};
+
+struct edges_info {
+    line *edges;
+    int count;
 };
 
 struct shift_params {

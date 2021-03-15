@@ -1,9 +1,9 @@
-#include "main_func.h"
-#include "figure_funcs.h"
+#include "entry.h"
+#include "figure.h"
 #include "errors.h"
 
-int main_func(parametrs &params, operations func) {
-    static figure edges = { NULL, NULL, 0, 0 };
+int entry(parametrs &params, operations func) {
+    static fig_info edges = init_fig();
     int rc = OK;
 
     if (func == SHIFT) {
@@ -16,7 +16,7 @@ int main_func(parametrs &params, operations func) {
         rc = scale(edges, params.scale);
     }
     if (func == GET_EDGE) {
-        rc = get_edge(params.edge, edges);
+        rc = get_screen_edge(params.edge, edges);
     }
     if (func == IMPORT) {
         rc = import_fig(edges, params.f);

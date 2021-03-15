@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "main_func.h"
+#include "entry.h"
 #include "errors.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
@@ -49,7 +49,7 @@ void MainWindow::on_shift_button_clicked() {
     par.shift.y_shift = ui->y_shift_input->text().toDouble();
     par.shift.z_shift = ui->z_shift_input->text().toDouble();
 
-    main_func(par, SHIFT);
+    entry(par, SHIFT);
 
     draw();
 }
@@ -65,7 +65,7 @@ void MainWindow::on_rotate_button_clicked() {
     par.rotate.yz_angle = ui->yz_angle_input->text().toDouble();
     par.rotate.zx_angle = ui->zx_angle_input->text().toDouble();
 
-    main_func(par, ROTATE);
+    entry(par, ROTATE);
 
     draw();
 }
@@ -81,7 +81,7 @@ void MainWindow::on_scale_button_clicked() {
     par.scale.coefs.y_scale = ui->y_scale_input->text().toDouble();
     par.scale.coefs.z_scale = ui->z_scale_input->text().toDouble();
 
-    main_func(par, SCALE);
+    entry(par, SCALE);
 
     draw();
 }
@@ -96,7 +96,7 @@ void MainWindow::on_import_button_clicked() {
         print_message(str);
     }
     else {
-        rc = main_func(file, IMPORT);
+        rc = entry(file, IMPORT);
 
         if (rc == WRONG_DATA) {
             char str[16] = "Wrong file data";
@@ -127,7 +127,7 @@ void MainWindow::on_export_button_clicked()
         print_message(str);
     }
     else {
-        main_func(file, EXPORT);
+        entry(file, EXPORT);
 
         fclose(file.f);
     }
@@ -147,7 +147,7 @@ void MainWindow::draw() {
 
     for (size_t i = 0; !rc; i++) {
         par.edge.number = i;
-        rc = main_func(par, GET_EDGE);
+        rc = entry(par, GET_EDGE);
 
         if (!rc)
             p.drawLine(par.edge.dot1.x, par.edge.dot1.y,

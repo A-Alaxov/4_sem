@@ -21,6 +21,6 @@ union parametrs{
     FILE *f;
 };
 
-int main_func(parametrs &params, operations func);
+int entry(parametrs &params, operations func);
 
 #endif // MAIN_FUNC_H
