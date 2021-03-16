@@ -2,7 +2,7 @@
 #include "figure.h"
 #include "errors.h"
 
-int entry(parametrs &params, operations func) {
+int entry(parametrs &params, const operations func) {
     static fig_info figure = init_fig();
     int rc = OK;
 

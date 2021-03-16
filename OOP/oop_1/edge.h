@@ -8,10 +8,10 @@ struct line{
     int dot2;
 };
 
-bool check_line(line &edge, int &count);
+bool check_line(const line &edge, const int &count);
 
-int import_edge(line &edge, FILE *f);
+int import_edge(line &edge, FILE *const f);
 
-int export_edge(FILE *f, line &edge);
+int export_edge(FILE *const f, const line &edge);
 
 #endif // EDGE_H

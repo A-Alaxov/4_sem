@@ -14,10 +14,11 @@ dots_info init_dots() {
 
 void free_dots(dots_info &fig_dots) {
     free(fig_dots.dots);
+    fig_dots.dots = NULL;
     fig_dots.count = 0;
 }
 
-int shift_all_dots(dots_info &fig_dots, shift_params &params) {
+int shift_all_dots(dots_info &fig_dots, const shift_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -28,7 +29,7 @@ int shift_all_dots(dots_info &fig_dots, shift_params &params) {
     return OK;
 }
 
-trig_funcs trig_init(double &angle) {
+trig_funcs trig_init(const double &angle) {
     trig_funcs funcs;
     funcs.sin = sin(angle);
     funcs.cos = cos(angle);
@@ -36,22 +37,23 @@ trig_funcs trig_init(double &angle) {
     return funcs;
 }
 
-int rotate_all_dots(dots_info &fig_dots, rotate_params &params) {
+int rotate_all_dots(dots_info &fig_dots, const rotate_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
     dot opp_centre;
     get_opposite(opp_centre, params.centre);
 
-    params.xy_angle = (params.xy_angle * M_PI) / 180;
-    params.yz_angle = (params.yz_angle * M_PI) / 180;
-    params.zx_angle = (params.zx_angle * M_PI) / 180;
-
     trig_angles angles;
 
-    angles.xy_flat = trig_init(params.xy_angle);
-    angles.yz_flat = trig_init(params.yz_angle);
-    angles.zx_flat = trig_init(params.zx_angle);
+    double cur_angle = (params.xy_angle * M_PI) / 180;
+    angles.xy_flat = trig_init(cur_angle);
+
+    cur_angle = (params.yz_angle * M_PI) / 180;
+    angles.yz_flat = trig_init(cur_angle);
+
+    cur_angle = (params.zx_angle * M_PI) / 180;
+    angles.zx_flat = trig_init(cur_angle);
 
     for (int i = 0; i < fig_dots.count; i++) {
         change_coord_sys(fig_dots.dots[i], params.centre);
@@ -62,7 +64,7 @@ int rotate_all_dots(dots_info &fig_dots, rotate_params &params) {
     return OK;
 }
 
-int scale_all_dots(dots_info &fig_dots, scale_params &params) {
+int scale_all_dots(dots_info &fig_dots, const scale_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -78,7 +80,7 @@ int scale_all_dots(dots_info &fig_dots, scale_params &params) {
     return OK;
 }
 
-int get_edge_dots(dot &scr_dot, int &number, dots_info &fig_dots) {
+int get_edge_dots(dot &scr_dot, const int &number, const dots_info &fig_dots) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -87,7 +89,7 @@ int get_edge_dots(dot &scr_dot, int &number, dots_info &fig_dots) {
     return OK;
 }
 
-int import_all_dots(dots_info &fig_dots, FILE *f) {
+int import_all_dots(dots_info &fig_dots, FILE *const f) {
     int rc = OK;
     int i = 0;
 
@@ -110,7 +112,7 @@ int import_all_dots(dots_info &fig_dots, FILE *f) {
     return rc;
 }
 
-int export_all_dots(FILE *f, dots_info &fig_dots) {
+int export_all_dots(FILE *const f, const dots_info &fig_dots) {
     if (!fig_dots.dots)
         return NO_DATA;
 

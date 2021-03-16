@@ -26,16 +26,16 @@ dots_info init_dots();
 
 void free_dots(dots_info &fig_dots);
 
-int shift_all_dots(dots_info &fig_dots, shift_params &param);
+int shift_all_dots(dots_info &fig_dots, const shift_params &param);
 
-int rotate_all_dots(dots_info &fig_dots, rotate_params &param);
+int rotate_all_dots(dots_info &fig_dots, const rotate_params &param);
 
-int scale_all_dots(dots_info &fig_dots, scale_params &param);
+int scale_all_dots(dots_info &fig_dots, const scale_params &param);
 
-int get_edge_dots(dot &scr_dot, int &number, dots_info &fig_dots);
+int get_edge_dots(dot &scr_dot, const int &number, const dots_info &fig_dots);
 
-int import_all_dots(dots_info &fig_dots, FILE *f);
+int import_all_dots(dots_info &fig_dots, FILE *const f);
 
-int export_all_dots(FILE *f, dots_info &fig_dots);
+int export_all_dots(FILE *const f, const dots_info &fig_dots);
 
 #endif // DOTS_INFO_H

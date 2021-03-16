@@ -13,10 +13,11 @@ edges_info init_edges() {
 
 void free_edges(edges_info &fig_edges) {
     free(fig_edges.edges);
+    fig_edges.edges = NULL;
     fig_edges.count = 0;
 }
 
-bool check_edges(edges_info &fig_edges, int &count) {
+bool check_edges(const edges_info &fig_edges, const int &count) {
     if (!fig_edges.edges)
         return false;
 
@@ -28,7 +29,7 @@ bool check_edges(edges_info &fig_edges, int &count) {
     return rc;
 }
 
-int get_cur_line(line &cur_edge, int &number, edges_info &fig_edges) {
+int get_cur_line(line &cur_edge, const int &number, const edges_info &fig_edges) {
     if (!fig_edges.edges)
         return NO_DATA;
 
@@ -40,7 +41,7 @@ int get_cur_line(line &cur_edge, int &number, edges_info &fig_edges) {
     return OK;
 }
 
-int import_all_edges(edges_info &fig_edges, FILE *f) {
+int import_all_edges(edges_info &fig_edges, FILE *const f) {
     int rc = OK;
     int i = 0;
 
@@ -63,7 +64,7 @@ int import_all_edges(edges_info &fig_edges, FILE *f) {
     return rc;
 }
 
-int export_all_edges(FILE *f, edges_info &fig_edges) {
+int export_all_edges(FILE *const f, const edges_info &fig_edges) {
     if (!fig_edges.edges)
         return NO_DATA;
 

@@ -2,7 +2,7 @@
 #include "errors.h"
 #include <cmath>
 
-int shift_dot(dot &dot, shift_params &param) {
+int shift_dot(dot &dot, const shift_params &param) {
     dot.x += param.x_shift;
     dot.y += param.y_shift;
     dot.z += param.z_shift;
@@ -10,7 +10,7 @@ int shift_dot(dot &dot, shift_params &param) {
     return OK;
 }
 
-int get_opposite(dot &opp_centre, dot &centre) {
+int get_opposite(dot &opp_centre, const dot &centre) {
     opp_centre.x = -centre.x;
     opp_centre.y = -centre.y;
     opp_centre.z = -centre.z;
@@ -18,7 +18,7 @@ int get_opposite(dot &opp_centre, dot &centre) {
     return OK;
 }
 
-int change_coord_sys(dot &cur_dot, dot &centre) {
+int change_coord_sys(dot &cur_dot, const dot &centre) {
     cur_dot.x -= centre.x;
     cur_dot.y -= centre.y;
     cur_dot.z -= centre.z;
@@ -26,7 +26,7 @@ int change_coord_sys(dot &cur_dot, dot &centre) {
     return OK;
 }
 
-int rotate_in_flat(double &coord_1, double &coord_2, trig_funcs &angle) {
+int rotate_in_flat(double &coord_1, double &coord_2, const trig_funcs &angle) {
     double tmp_1 = coord_1;
     double tmp_2 = coord_2;
 
@@ -36,7 +36,7 @@ int rotate_in_flat(double &coord_1, double &coord_2, trig_funcs &angle) {
     return OK;
 }
 
-int rotate_dot(dot &dot, trig_angles &angles) {
+int rotate_dot(dot &dot, const trig_angles &angles) {
     rotate_in_flat(dot.x, dot.y, angles.xy_flat);
     rotate_in_flat(dot.y, dot.z, angles.yz_flat);
     rotate_in_flat(dot.z, dot.x, angles.zx_flat);
@@ -44,7 +44,7 @@ int rotate_dot(dot &dot, trig_angles &angles) {
     return OK;
 }
 
-int scale_dot(dot &dot, scale_coefs &coefs) {
+int scale_dot(dot &dot, const scale_coefs &coefs) {
     dot.x *= coefs.x_scale;
     dot.y *= coefs.y_scale;
     dot.z *= coefs.z_scale;
@@ -52,14 +52,14 @@ int scale_dot(dot &dot, scale_coefs &coefs) {
     return OK;
 }
 
-int get_screen_dot(dot &scr_dot, dot &orig_dot) {
+int get_screen_dot(dot &scr_dot, const dot &orig_dot) {
     scr_dot.x = orig_dot.y - orig_dot.x * sqrt(3) / 2;
     scr_dot.y = orig_dot.x / 2 - orig_dot.z;
 
     return OK;
 }
 
-int import_dot(dot &dot, FILE *f) {
+int import_dot(dot &dot, FILE *const f) {
     if (fscanf(f, "%lf", &dot.x) != 1)
         return WRONG_DATA;
     if (fscanf(f, "%lf", &dot.y) != 1)
@@ -70,7 +70,7 @@ int import_dot(dot &dot, FILE *f) {
     return OK;
 }
 
-int export_dot(FILE *f, dot &dot) {
+int export_dot(FILE *const f, const dot &dot) {
     fprintf(f, "%lf %lf %lf\n", dot.x, dot.y, dot.z);
 
     return OK;

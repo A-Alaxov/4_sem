@@ -32,20 +32,20 @@ struct scale_coefs {
     double z_scale;
 };
 
-int shift_dot(dot &dot, shift_params &param);
+int shift_dot(dot &dot, const shift_params &param);
 
-int get_opposite(dot &opp_centre, dot &centre);
+int get_opposite(dot &opp_centre, const dot &centre);
 
-int change_coord_sys(dot &cur_dot, dot &centre);
+int change_coord_sys(dot &cur_dot, const dot &centre);
 
-int rotate_dot(dot &dot, trig_angles &angles);
+int rotate_dot(dot &dot, const trig_angles &angles);
 
-int scale_dot(dot &dot, scale_coefs &coefs);
+int scale_dot(dot &dot, const scale_coefs &coefs);
 
-int get_screen_dot(dot &changed_dot, dot &orig_dot);
+int get_screen_dot(dot &changed_dot, const dot &orig_dot);
 
-int import_dot(dot &dot, FILE *f);
+int import_dot(dot &dot, FILE *const f);
 
-int export_dot(FILE *f, dot &dot);
+int export_dot(FILE *const f, const dot &dot);
 
 #endif // DOT_FUNCS_H

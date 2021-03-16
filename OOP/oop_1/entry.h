@@ -23,6 +23,6 @@ union parametrs{
     char *file_name;
 };
 
-int entry(parametrs &params, operations func);
+int entry(parametrs &params, const operations func);
 
 #endif // MAIN_FUNC_H

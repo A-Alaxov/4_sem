@@ -20,14 +20,14 @@ void free_fig(fig_info &figure) {
     figure.exist = false;
 }
 
-bool check_fig(fig_info &figure) {
+bool check_fig(const fig_info &figure) {
     if ((figure.exist) && (check_edges(figure.fig_edges, figure.fig_dots.count)))
         return true;
     else
         return false;
 }
 
-int shift(fig_info &figure, shift_params &params) {
+int shift(fig_info &figure, const shift_params &params) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
 
@@ -36,7 +36,7 @@ int shift(fig_info &figure, shift_params &params) {
     return rc;
 }
 
-int rotate(fig_info &figure, rotate_params &params) {
+int rotate(fig_info &figure, const rotate_params &params) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
 
@@ -45,7 +45,7 @@ int rotate(fig_info &figure, rotate_params &params) {
     return rc;
 }
 
-int scale(fig_info &figure, scale_params &params) {
+int scale(fig_info &figure, const scale_params &params) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
 
@@ -54,7 +54,7 @@ int scale(fig_info &figure, scale_params &params) {
     return rc;
 }
 
-int get_screen_edge(screen_edge &scr_edge, fig_info &figure) {
+int get_screen_edge(screen_edge &scr_edge, const fig_info &figure) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
 
@@ -70,7 +70,7 @@ int get_screen_edge(screen_edge &scr_edge, fig_info &figure) {
     return rc;
 }
 
-int import_fig(fig_info &figure, char *file_name) {
+int import_fig(fig_info &figure, const char *file_name) {
     int rc = OK;
 
     FILE *f = fopen(file_name, "r");
@@ -107,7 +107,7 @@ int import_fig(fig_info &figure, char *file_name) {
     return rc;
 }
 
-int export_fig(char *file_name, fig_info &figure) {
+int export_fig(const char *file_name, const fig_info &figure) {
     if (!check_fig(figure))
         return INCORRECT_FIG;
 
