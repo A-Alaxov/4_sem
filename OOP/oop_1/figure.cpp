@@ -89,6 +89,8 @@ int import_fig(fig_info &figure, const char *file_name) {
             free_dots(tmp_figure.fig_dots);
     }
 
+    fclose(f);
+
     if (!rc) {
         tmp_figure.exist = true;
 
@@ -101,8 +103,6 @@ int import_fig(fig_info &figure, const char *file_name) {
             rc = INCORRECT_FIG;
         }
     }
-
-    fclose(f);
 
     return rc;
 }
