@@ -52,7 +52,7 @@ int scale_dot(dot &dot, const scale_coefs &coefs) {
     return OK;
 }
 
-int get_screen_dot(dot &scr_dot, const dot &orig_dot) {
+int get_screen_dot(screen_dot &scr_dot, const dot &orig_dot) {
     scr_dot.x = orig_dot.y - orig_dot.x * sqrt(3) / 2;
     scr_dot.y = orig_dot.x / 2 - orig_dot.z;
 

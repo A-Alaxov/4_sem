@@ -10,11 +10,9 @@ struct fig_info {
     bool exist;
 };
 
-struct screen_edge {
-    dot dot1;
-    dot dot2;
-
-    int number;
+struct screen_fig {
+    screen_dots fig_dots;
+    edges_info fig_edges;
 };
 
 fig_info init_fig();
@@ -27,7 +25,7 @@ int rotate(fig_info &figure, const rotate_params &param);
 
 int scale(fig_info &figure, const scale_params &param);
 
-int get_screen_edge(screen_edge &scr_edge, const fig_info &figure);
+int get_screen_fig(screen_fig &scr_fig, const fig_info &figure);
 
 int import_fig(fig_info &figure, const char *file_name);
 

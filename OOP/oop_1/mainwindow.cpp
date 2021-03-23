@@ -140,20 +140,20 @@ void MainWindow::draw() {
     p.setPen(QColor(200, 0, 0));
 
     parametrs par;
-    int rc = OK;
+    int rc = entry(par, GET_FIG);
 
-    for (size_t i = 0; !rc; i++) {
-        par.edge.number = i;
-        rc = entry(par, GET_EDGE);
+    if (!rc) {
+        for (int i = 0; i < par.screen_fig.fig_edges.count; i++) {
+            p.drawLine(par.screen_fig.fig_dots.dots[par.screen_fig.fig_edges.edges[i].dot1].x,
+                       par.screen_fig.fig_dots.dots[par.screen_fig.fig_edges.edges[i].dot1].y,
+                       par.screen_fig.fig_dots.dots[par.screen_fig.fig_edges.edges[i].dot2].x,
+                       par.screen_fig.fig_dots.dots[par.screen_fig.fig_edges.edges[i].dot2].y);
+        }
 
-        if (!rc)
-            p.drawLine(par.edge.dot1.x, par.edge.dot1.y,
-                       par.edge.dot2.x, par.edge.dot2.y);
+        QPixmap pixmap = QPixmap::fromImage(image);
+        scene->addPixmap(pixmap);
+        ui->graphicsView->setScene(scene);
     }
-
-    QPixmap pixmap = QPixmap::fromImage(image);
-    scene->addPixmap(pixmap);
-    ui->graphicsView->setScene(scene);
 }
 
 void MainWindow::print_message(char *str) {

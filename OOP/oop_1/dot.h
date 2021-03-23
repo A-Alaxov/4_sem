@@ -9,6 +9,11 @@ struct dot {
     double z;
 };
 
+struct screen_dot {
+    double x;
+    double y;
+};
+
 struct shift_params {
     double x_shift;
     double y_shift;
@@ -42,7 +47,7 @@ int rotate_dot(dot &dot, const trig_angles &angles);
 
 int scale_dot(dot &dot, const scale_coefs &coefs);
 
-int get_screen_dot(dot &changed_dot, const dot &orig_dot);
+int get_screen_dot(screen_dot &scr_dot, const dot &orig_dot);
 
 int import_dot(dot &dot, FILE *const f);
 

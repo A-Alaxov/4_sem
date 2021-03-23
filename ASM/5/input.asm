@@ -1,6 +1,5 @@
 public input
 extrn ROW_MSG: byte
-extrn ROW_MSG: byte
 extrn COL_MSG: byte
 extrn MATR_INP: byte
 extrn NEXT_ROW: byte

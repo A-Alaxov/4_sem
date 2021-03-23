@@ -8,7 +8,9 @@ struct line{
     int dot2;
 };
 
-bool check_line(const line &edge, const int &count);
+int check_line(const line &edge, const int &count);
+
+int edge_copy(line &scr_edge, const line &fig_edge);
 
 int import_edge(line &edge, FILE *const f);
 

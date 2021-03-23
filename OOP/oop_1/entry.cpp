@@ -2,7 +2,7 @@
 #include "figure.h"
 #include "errors.h"
 
-int entry(parametrs &params, const operations func) {
+int entry(parametrs &params, const operations &func) {
     static fig_info figure = init_fig();
     int rc = OK;
 
@@ -15,8 +15,8 @@ int entry(parametrs &params, const operations func) {
     if (func == SCALE) {
         rc = scale(figure, params.scale);
     }
-    if (func == GET_EDGE) {
-        rc = get_screen_edge(params.edge, figure);
+    if (func == GET_FIG) {
+        rc = get_screen_fig(params.screen_fig, figure);
     }
     if (func == IMPORT) {
         rc = import_fig(figure, params.file_name);

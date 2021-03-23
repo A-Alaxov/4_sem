@@ -18,7 +18,7 @@ void free_dots(dots_info &fig_dots) {
     fig_dots.count = 0;
 }
 
-int shift_all_dots(dots_info &fig_dots, const shift_params &params) {
+int shift_dots(dots_info &fig_dots, const shift_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -30,14 +30,16 @@ int shift_all_dots(dots_info &fig_dots, const shift_params &params) {
 }
 
 trig_funcs trig_init(const double &angle) {
+    double degr_angle = (angle * M_PI) / 180;
+
     trig_funcs funcs;
-    funcs.sin = sin(angle);
-    funcs.cos = cos(angle);
+    funcs.sin = sin(degr_angle);
+    funcs.cos = cos(degr_angle);
 
     return funcs;
 }
 
-int rotate_all_dots(dots_info &fig_dots, const rotate_params &params) {
+int rotate_dots(dots_info &fig_dots, const rotate_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -45,15 +47,9 @@ int rotate_all_dots(dots_info &fig_dots, const rotate_params &params) {
     get_opposite(opp_centre, params.centre);
 
     trig_angles angles;
-
-    double cur_angle = (params.xy_angle * M_PI) / 180;
-    angles.xy_flat = trig_init(cur_angle);
-
-    cur_angle = (params.yz_angle * M_PI) / 180;
-    angles.yz_flat = trig_init(cur_angle);
-
-    cur_angle = (params.zx_angle * M_PI) / 180;
-    angles.zx_flat = trig_init(cur_angle);
+    angles.xy_flat = trig_init(params.xy_angle);
+    angles.yz_flat = trig_init(params.yz_angle);
+    angles.zx_flat = trig_init(params.zx_angle);
 
     for (int i = 0; i < fig_dots.count; i++) {
         change_coord_sys(fig_dots.dots[i], params.centre);
@@ -64,7 +60,7 @@ int rotate_all_dots(dots_info &fig_dots, const rotate_params &params) {
     return OK;
 }
 
-int scale_all_dots(dots_info &fig_dots, const scale_params &params) {
+int scale_dots(dots_info &fig_dots, const scale_params &params) {
     if (!fig_dots.dots)
         return NO_DATA;
 
@@ -80,30 +76,56 @@ int scale_all_dots(dots_info &fig_dots, const scale_params &params) {
     return OK;
 }
 
-int get_edge_dots(dot &scr_dot, const int &number, const dots_info &fig_dots) {
-    if (!fig_dots.dots)
-        return NO_DATA;
+int screen_dots_alloc(screen_dots &fig_dots, const int &count) {
+    screen_dot *tmp_dots = (screen_dot*)malloc(count * sizeof(screen_dot));
+    if (!tmp_dots)
+        return MEM_ERR;
 
-    get_screen_dot(scr_dot, fig_dots.dots[number]);
+    fig_dots.dots = tmp_dots;
+    fig_dots.count = count;
+    return OK;
+}
+
+int get_screen_dots(screen_dots &scr_dots, const dots_info &fig_dots) {
+    int rc = screen_dots_alloc(scr_dots, fig_dots.count);
+
+    for (int i = 0; (!rc) && (i < fig_dots.count); i++) {
+        rc = get_screen_dot(scr_dots.dots[i], fig_dots.dots[i]);
+    }
+
+    return rc;
+}
+
+int scan_dots_count(int &count, FILE *const f) {
+    if (fscanf(f, "%d", &count) != 1)
+        return WRONG_DATA;
 
     return OK;
 }
 
-int import_all_dots(dots_info &fig_dots, FILE *const f) {
-    int rc = OK;
-    int i = 0;
-
-    if (fscanf(f, "%d", &(fig_dots.count)) != 1)
-        return WRONG_DATA;
-
-    fig_dots.dots = (dot*)malloc(fig_dots.count * sizeof(dot));
-    if (!fig_dots.dots)
+int dots_alloc(dots_info &fig_dots, const int &count) {
+    dot *tmp_dots = (dot*)malloc(count * sizeof(dot));
+    if (!tmp_dots)
         return MEM_ERR;
 
-    while ((!rc) && (i < fig_dots.count)) {
-        rc = import_dot(fig_dots.dots[i], f);
+    fig_dots.dots = tmp_dots;
+    fig_dots.count = count;
+    return OK;
+}
 
-        i++;
+int import_dots(dots_info &fig_dots, FILE *const f) {
+    int count;
+
+    int rc = scan_dots_count(count, f);
+    if (rc)
+        return rc;
+
+    rc = dots_alloc(fig_dots, count);
+    if (rc)
+        return rc;
+
+    for (int i = 0; (!rc) && (i < fig_dots.count); i++) {
+        rc = import_dot(fig_dots.dots[i], f);
     }
 
     if (rc)
@@ -112,7 +134,7 @@ int import_all_dots(dots_info &fig_dots, FILE *const f) {
     return rc;
 }
 
-int export_all_dots(FILE *const f, const dots_info &fig_dots) {
+int export_dots(FILE *const f, const dots_info &fig_dots) {
     if (!fig_dots.dots)
         return NO_DATA;
 

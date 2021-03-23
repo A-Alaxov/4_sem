@@ -9,7 +9,7 @@ enum operations{
     SHIFT,
     ROTATE,
     SCALE,
-    GET_EDGE,
+    GET_FIG,
     IMPORT,
     EXPORT,
     FREE
@@ -19,10 +19,10 @@ union parametrs{
     shift_params shift;
     rotate_params rotate;
     scale_params scale;
-    screen_edge edge;
+    screen_fig screen_fig;
     char *file_name;
 };
 
-int entry(parametrs &params, const operations func);
+int entry(parametrs &params, const operations &func);
 
 #endif // MAIN_FUNC_H

@@ -1,12 +1,18 @@
 #include "edge.h"
 #include "errors.h"
 
-bool check_line(const line &edge, const int &count) {
+int check_line(const line &edge, const int &count) {
     if ((edge.dot1 < 0) || (edge.dot1 >= count) ||
         (edge.dot2 < 0) || (edge.dot2 >= count))
-        return false;
+        return INCORRECT_FIG;
     else
-        return true;
+        return OK;
+}
+
+int edge_copy(line &scr_edge, const line &fig_edge) {
+    scr_edge = fig_edge;
+
+    return OK;
 }
 
 int import_edge(line &edge, FILE *const f) {
