@@ -3,6 +3,7 @@ import tkinter.messagebox as msg
 import tkinter.ttk as ttk
 import numpy as np
 from time_compare import time_compare
+from stairs_research import stairs_research
 
 
 def rotate_dot(dot, angle, centre):
@@ -17,15 +18,16 @@ def rgb_to_hex(rgb):
     return "#%02x%02x%02x" % rgb
 
 
-def draw_dot(dot, **kwargs):
-    fill = list(kwargs.pop('fill'))
-    if 'alpha' in kwargs:
-        alpha = kwargs.pop('alpha')
-        back = kwargs.pop('back')
+def set_intense(fill, alpha, back):
+    fill = list(fill)
+    for i in range(3):
+        fill[i] = int(fill[i] * alpha + back[i] * (1 - alpha))
+    return tuple(fill)
 
-        for i in range(3):
-            fill[i] = int(fill[i] * alpha + back[i] * (1 - alpha))
-    canv.create_line(dot[0], dot[1], dot[0] + 1, dot[1] + 1, fill = rgb_to_hex(tuple(fill)))
+
+def draw_dot(dot, fill):
+    canv.create_line(dot[0], dot[1], dot[0] + 1, dot[1] + 1,\
+                     fill = rgb_to_hex(fill))
 
 
 def draw_line(dot1, dot2, color):
@@ -67,17 +69,16 @@ def Brezenham_method(beg, end, color, back):
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
-        print("Not integer")
+        msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
+быть целочисленными')
         return
 
     if beg[0] == end[0] and beg[1] == end[1]:
         draw_dot((round(beg[0]), round(beg[1])), fill = color)
         return
-    
-    x = beg[0]
-    y = beg[1]
-    dx = np.fabs(end[0] - beg[0])
-    dy = np.fabs(end[1] - beg[1])
+
+    dx = int(np.fabs(end[0] - beg[0]))
+    dy = int(np.fabs(end[1] - beg[1]))
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -89,6 +90,8 @@ def Brezenham_method(beg, end, color, back):
 
     m = dy / dx
     f = m - 0.5
+    x = beg[0]
+    y = beg[1]
 
     i = 1
     while i <= dx + 1:
@@ -112,17 +115,16 @@ def integer_Brezenham_method(beg, end, color, back):
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
-        print("Not integer")
+        msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
+быть целочисленными')
         return
 
     if beg[0] == end[0] and beg[1] == end[1]:
         draw_dot((round(beg[0]), round(beg[1])), fill = color)
         return
     
-    x = beg[0]
-    y = beg[1]
-    dx = np.fabs(end[0] - beg[0])
-    dy = np.fabs(end[1] - beg[1])
+    dx = int(np.fabs(end[0] - beg[0]))
+    dy = int(np.fabs(end[1] - beg[1]))
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -133,6 +135,8 @@ def integer_Brezenham_method(beg, end, color, back):
         fl = 0
 
     f = 2 * dy - dx
+    x = beg[0]
+    y = beg[1]
 
     i = 1
     while i <= dx + 1:
@@ -156,17 +160,16 @@ def Brezenham_method_without_stairs(beg, end, color, back):
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
-        print("Not integer")
+        msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
+быть целочисленными')
         return
 
     if beg[0] == end[0] and beg[1] == end[1]:
         draw_dot((round(beg[0]), round(beg[1])), fill = color)
         return
     
-    x = beg[0]
-    y = beg[1]
-    dx = np.fabs(end[0] - beg[0])
-    dy = np.fabs(end[1] - beg[1])
+    dx = int(np.fabs(end[0] - beg[0]))
+    dy = int(np.fabs(end[1] - beg[1]))
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -179,10 +182,13 @@ def Brezenham_method_without_stairs(beg, end, color, back):
     m = dy / dx
     I = 1
     f = I / 2
+    x = beg[0]
+    y = beg[1]
     m *= I
     w = I - m
 
-    draw_dot((x, y), fill = color, alpha = f, back = back)
+    new_color = set_intense(color, f, back)
+    draw_dot((x, y), fill = new_color)
     i = 1
     while i <= dx:
         if f < w:
@@ -195,11 +201,16 @@ def Brezenham_method_without_stairs(beg, end, color, back):
             y += sy
             x += sx
             f -= w
-        draw_dot((x, y), fill = color, alpha = f, back = back)
+        new_color = set_intense(color, f, back)
+        draw_dot((x, y), fill = new_color)
         i += 1
 
 
 def Wu_method(beg, end, color, back):
+    if beg[0] == end[0] and beg[1] == end[1]:
+        draw_dot((round(beg[0]), round(beg[1])), fill = color)
+        return
+    
     dx = end[0] - beg[0]
     dy = end[1] - beg[1]
     if np.fabs(dy) > np.fabs(dx):
@@ -221,18 +232,20 @@ def Wu_method(beg, end, color, back):
     xpxl2 = round(end[0])
 
     x = xpxl1
-    while x <= xpxl2 + 1:
+    while x <= xpxl2:
         x_draw = x
         y_draw = int(intery)
         if change:
             x_draw, y_draw = y_draw, x_draw
-        draw_dot((x_draw, y_draw), fill = color, alpha = 1 - intery % 1, back = back)
+        new_color = set_intense(color, 1 - intery % 1, back)
+        draw_dot((x_draw, y_draw), fill = new_color)
 
         if change:
             x_draw += 1
         else:
             y_draw += 1
-        draw_dot((x_draw, y_draw), fill = color, alpha = intery % 1, back = back)
+        new_color = set_intense(color, intery % 1, back)
+        draw_dot((x_draw, y_draw), fill = new_color)
         intery += gradient
         x += 1
 
@@ -288,7 +301,8 @@ def draw_segment(entr1, entr2, func, color, back):
                     elif func == 4:
                         integer_Brezenham_method(beg_dot, end_dot, color, back)
                     elif func == 5:
-                        Brezenham_method_without_stairs(beg_dot, end_dot, color, back)
+                        Brezenham_method_without_stairs(beg_dot, end_dot,\
+                                                        color, back)
                     elif func == 6:
                         Wu_method(beg_dot, end_dot, color, back)
 
@@ -358,66 +372,59 @@ def draw_circle(entr1, entr2, func, color, back):
 
 
 def info():
-    msg.showinfo("Информация", "Компьютерная графика #2\n\
+    msg.showinfo("Информация", "Компьютерная графика №3\n\
 Разработчик: Алахов Андрей, ИУ7-42б\n\n\
-Эта программа позволяет осуществить перенос, поворот и масштабирование \
-исходного рисунка. Также доступны опции возврата к исходному и предыдущему \
-рисункам.\n\n\
-Для задания величин смещения введите их в следующем формате: X  Y\n\
-Для задания центра масштабирования и поворота введите его координаты в \
-следующем формате: X  Y\n\
-Для задания коэффициентов масштабирования введите их в следующем формате: kx  \
-ky\n\
-Для задания центра масштабирования и поворота можно сделать клик ПКМ на холст \
-в нужной точке\n\n\
-На рисунке для удобства отображены координаты центральной точки")
+Эта программа позволяет выполняет отрисовку отрезков или спектров с помощью\
+различных алгоритмов. Также доступны опции сравнения временных характеристик\
+алгоритмов и исследования степенчатости выбранного алгоритма.\n\n\
+Для задания координат введите их в следующем формате: X  Y")
 
 
 def main_init(table_app, canv):
     info_text = "Введите координаты начала отрезка:"
     lbl1 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl1.grid(row = 0, column = 0)
+    lbl1.grid(row = 10, column = 0)
 
     entr1 = tk.Entry(table_app, width=15, font="Arial 14")
-    entr1.grid(row = 0, column = 1)
+    entr1.grid(row = 10, column = 1)
     entr1.insert(0, "0   0")
 
     info_text = "Введите координаты конца отрезка:"
     lbl2 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl2.grid(row = 1, column = 0)
+    lbl2.grid(row = 11, column = 0)
 
     entr2 = tk.Entry(table_app, width=15, font="Arial 14")
-    entr2.grid(row = 1, column = 1)
+    entr2.grid(row = 11, column = 1)
     entr2.insert(0, "483  401")
     canv.bind("<Button-3>", lambda event : add_dot(event, entr2))
 
     info_text = "Введите угол поворота (в градусах):"
     lbl3 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl3.grid(row = 2, column = 0)
+    lbl3.grid(row = 12, column = 0)
 
     entr3 = tk.Entry(table_app, width=15, font="Arial 14")
-    entr3.grid(row = 2, column = 1)
+    entr3.grid(row = 12, column = 1)
     entr3.insert(0, "30")
 
     info_text = "Введите длину отрезка:"
     lbl4 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl4.grid(row = 3, column = 0)
+    lbl4.grid(row = 13, column = 0)
 
     entr4 = tk.Entry(table_app, width=15, font="Arial 14")
-    entr4.grid(row = 3, column = 1)
+    entr4.grid(row = 13, column = 1)
     entr4.insert(0, "100")
 
-    info_text = "\n\nМетод построения:"
+    info_text = "Метод построения:"
     lbl5 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl5.grid(row = 4, column = 0, sticky=tk.W)
+    lbl5.grid(row = 0, column = 0, sticky=tk.W)
 
-    info_text = "\n\nЦвет отрезка:"
+    info_text = "Цвет отрезка:"
     lbl6 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl6.grid(row = 4, column = 1, sticky=tk.W)
+    lbl6.grid(row = 0, column = 1, sticky=tk.W)
 
-    info_text = "\n\nЦвет фона:"
+    info_text = "Цвет фона:"
     lbl7 = tk.Label(table_app, text=info_text, font="Arial 14")
-    lbl7.grid(row = 4, column = 2, sticky=tk.W)
+    lbl7.grid(row = 0, column = 2, sticky=tk.W)
 
     var = tk.IntVar()
     names = [('Библиотечная ф-я', 1), ('Алгоритм ЦДА', 2),
@@ -425,45 +432,58 @@ def main_init(table_app, canv):
              ('Целочисленный алгоритм Брезенхема', 4),
              ('Брезенхем с устранением ступенчатости', 5),
              ('Алгоритм Ву', 6)]
-    row = 6
+    row = 1
     for txt, func in names:
-        tk.Radiobutton(table_app, text = txt, value = func, variable = var, font="Arial 14")\
-        .grid(row=row, column = 0, sticky=tk.W)
+        tk.Radiobutton(table_app, text = txt, value = func, variable = var,\
+                       font="Arial 14").grid(row=row, column = 0, sticky=tk.W)
         row += 1
 
     col_var = tk.StringVar()
-    names = [('Белый', (255, 255, 255)), ('Чёрный', (0, 0, 0)), ('Синий', (0, 0, 255)),
-             ('Красный', (255, 0, 0)), ('Зелёный', (0, 255, 0)),
-             ('Оранжевый', (255, 140, 0)), ('Пурпурный', (128, 0, 128))]
-    row = 6
+    names = [('Белый', (255, 255, 255)), ('Чёрный', (0, 0, 0)),\
+             ('Синий', (0, 0, 255)), ('Красный', (255, 0, 0)),\
+             ('Зелёный', (0, 255, 0)), ('Оранжевый', (255, 140, 0)),\
+             ('Пурпурный', (128, 0, 128))]
+    row = 1
     for txt, col in names:
-        tk.Radiobutton(table_app, text = txt, value = col, variable = col_var, font="Arial 14")\
-        .grid(row=row, column = 1, sticky=tk.W)
+        tk.Radiobutton(table_app, text = txt, value = col, variable = col_var,\
+                       font="Arial 14").grid(row=row, column = 1, sticky=tk.W)
         row += 1
 
     back_var = tk.StringVar()
-    row = 6
+    row = 1
     for txt, col in names:
-        tk.Radiobutton(table_app, text = txt, value = col, variable = back_var, font="Arial 14")\
-        .grid(row=row, column = 2, sticky=tk.W)
+        tk.Radiobutton(table_app, text = txt, value = col, variable = back_var,\
+                       font="Arial 14").grid(row=row, column = 2, sticky=tk.W)
         row += 1
 
     btn1 = tk.Button(table_app, font="Arial 14",
                      text="Построить отрезок", bg = "#00FF00",
-                     command=lambda : draw_segment(entr1, entr2, var.get(), col_var.get(), back_var.get()))
-    btn1.grid(row = 0, column = 2, rowspan = 2, sticky = "nwes")
+                     command=lambda : draw_segment(entr1, entr2, var.get(),\
+                                                   col_var.get(),\
+                                                   back_var.get()))
+    btn1.grid(row = 10, column = 2, rowspan = 2, sticky = "nwes")
     btn2 = tk.Button(table_app, font="Arial 14",
                      text="Построить спектр", bg = "#00FF00",
-                     command=lambda : draw_circle(entr3, entr4, var.get(), col_var.get(), back_var.get()))
-    btn2.grid(row = 2, column = 2, rowspan = 2, sticky = "nwes")
+                     command=lambda : draw_circle(entr3, entr4, var.get(),\
+                                                  col_var.get(),\
+                                                  back_var.get()))
+    btn2.grid(row = 12, column = 2, rowspan = 2, sticky = "nwes")
     btn3 = tk.Button(table_app, font="Arial 14",
-                     text="Очистить", bg = "#00FF00",
+                     text="Очистить", bg = "pale green",
                      command=lambda : canv.delete("all"))
-    btn3.grid(row = 14, column = 2, sticky = tk.W + tk.E)
+    btn3.grid(row = 14, column = 1, rowspan = 2, sticky = "nwes")
     btn4 = tk.Button(table_app, font="Arial 14",
                      text="Сравнить время работы", bg = "#00FF00",
                      command=lambda : time_compare())
-    btn4.grid(row = 14, column = 0, sticky = tk.W + tk.E)
+    btn4.grid(row = 15, column = 0, sticky = tk.W + tk.E)
+    btn5 = tk.Button(table_app, font="Arial 14",
+                     text="Исследование ступенчатости", bg = "#00FF00",
+                     command=lambda : stairs_research(var.get()))
+    btn5.grid(row = 14, column = 0, sticky = tk.W + tk.E)
+    btn6 = tk.Button(table_app, font="Arial 14",
+                     text="Информация", bg = "dark sea green",
+                     command=lambda : info())
+    btn6.grid(row = 14, column = 2, rowspan = 2, sticky = "nwes")
 
 
 if __name__ == "__main__":

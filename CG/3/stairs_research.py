@@ -1,19 +1,15 @@
 import time
 import numpy as np
+from math import pi
 import matplotlib.pyplot as plt
+import tkinter.messagebox as msg
 
 
-def set_intense(fill, alpha, back):
-    fill = list(fill)
-    for i in range(3):
-        fill[i] = int(fill[i] * alpha + back[i] * (1 - alpha))
-    return tuple(fill)
-
-
-def cda_method(beg, end, color, back):
+def cda_method(beg, end):
+    stairs = 0
     if beg[0] == end[0] and beg[1] == end[1]:
         #draw_dot((round(beg[0]), round(beg[1])), fill = color)
-        return
+        return stairs
         
     if np.fabs(end[0] - beg[0]) >= np.fabs(end[1] - beg[1]):
         l = np.fabs(end[0] - beg[0])
@@ -22,6 +18,10 @@ def cda_method(beg, end, color, back):
 
     dx = (end[0] - beg[0]) / l
     dy = (end[1] - beg[1]) / l
+
+    prev = beg[1]
+    if dx < dy:
+        prev = beg[0]
 
     x = beg[0]
     y = beg[1]
@@ -33,21 +33,34 @@ def cda_method(beg, end, color, back):
         y += dy
         i += 1
 
+        if np.fabs(dx) < np.fabs(dy):
+            if np.fabs(round(prev) - round(x)) > 0:
+                stairs += 1
+        else:
+            if np.fabs(round(prev) - round(y)) > 0:
+                stairs += 1
 
-def Brezenham_method(beg, end, color, back):
+        prev = y
+        if np.fabs(dx) < np.fabs(dy):
+            prev = x
+    return stairs
+
+
+def Brezenham_method(beg, end):
+    stairs = 0
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
         msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
 быть целочисленными')
-        return
+        return stairs
 
     if beg[0] == end[0] and beg[1] == end[1]:
         #draw_dot((round(beg[0]), round(beg[1])), fill = color)
-        return
+        return stairs
     
-    dx = int(np.fabs(end[0] - beg[0]))
-    dy = int(np.fabs(end[1] - beg[1]))
+    dx = np.fabs(end[0] - beg[0])
+    dy = np.fabs(end[1] - beg[1])
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -71,6 +84,7 @@ def Brezenham_method(beg, end, color, back):
             else:
                 y += sy
             f -= 1
+            stairs += 1
         if f < 0:
             if fl:
                 y += sy
@@ -78,22 +92,24 @@ def Brezenham_method(beg, end, color, back):
                 x += sx
         f += m
         i += 1
+    return stairs
 
 
-def integer_Brezenham_method(beg, end, color, back):
+def integer_Brezenham_method(beg, end):
+    stairs = 0
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
         msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
 быть целочисленными')
-        return
+        return stairs
 
     if beg[0] == end[0] and beg[1] == end[1]:
         #draw_dot((round(beg[0]), round(beg[1])), fill = color)
-        return
+        return stairs
     
-    dx = int(np.fabs(end[0] - beg[0]))
-    dy = int(np.fabs(end[1] - beg[1]))
+    dx = np.fabs(end[0] - beg[0])
+    dy = np.fabs(end[1] - beg[1])
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -106,8 +122,6 @@ def integer_Brezenham_method(beg, end, color, back):
     f = 2 * dy - dx
     x = beg[0]
     y = beg[1]
-    d2x = dx * 2
-    d2y = dy * 2
 
     i = 1
     while i <= dx + 1:
@@ -117,30 +131,33 @@ def integer_Brezenham_method(beg, end, color, back):
                 x += sx
             else:
                 y += sy
-            f -= d2x
+            f -= (2 * dx)
+            stairs += 1
         if f < 0:
             if fl:
                 y += sy
             else:
                 x += sx
-        f += d2y
+        f += (2 * dy)
         i += 1
+    return stairs
         
 
-def Brezenham_method_without_stairs(beg, end, color, back):
+def Brezenham_method_without_stairs(beg, end):
+    stairs = 0
     if (int(beg[0]) != beg[0] or int(beg[1]) != beg[1] or
         int(end[0]) != end[0] or int(end[1]) != end[1]):
         
         msg.showerror('Ошибка', 'Для алгоритмов Брезенхема координаты должны \
 быть целочисленными')
-        return
+        return stairs
 
     if beg[0] == end[0] and beg[1] == end[1]:
         #draw_dot((round(beg[0]), round(beg[1])), fill = color)
-        return
+        return stairs
     
-    dx = int(np.fabs(end[0] - beg[0]))
-    dy = int(np.fabs(end[1] - beg[1]))
+    dx = np.fabs(end[0] - beg[0])
+    dy = np.fabs(end[1] - beg[1])
     sx = np.sign(end[0] - beg[0])
     sy = np.sign(end[1] - beg[1])
     
@@ -158,7 +175,6 @@ def Brezenham_method_without_stairs(beg, end, color, back):
     m *= I
     w = I - m
 
-    new_color = set_intense(color, f, back)
     #draw_dot((x, y), fill = color, alpha = f, back = back)
     i = 1
     while i <= dx:
@@ -172,15 +188,17 @@ def Brezenham_method_without_stairs(beg, end, color, back):
             y += sy
             x += sx
             f -= w
-        new_color = set_intense(color, f, back)
+            stairs += 1
         #draw_dot((x, y), fill = color, alpha = f, back = back)
         i += 1
+    return stairs
 
 
-def Wu_method(beg, end, color, back):
+def Wu_method(beg, end):
+    stairs = 0
     if beg[0] == end[0] and beg[1] == end[1]:
         #draw_dot((round(beg[0]), round(beg[1])), fill = color)
-        return
+        return stairs
     
     dx = end[0] - beg[0]
     dy = end[1] - beg[1]
@@ -208,53 +226,54 @@ def Wu_method(beg, end, color, back):
         y_draw = int(intery)
         if change:
             x_draw, y_draw = y_draw, x_draw
-        new_color = set_intense(color, 1 - intery % 1, back)
         #draw_dot((x_draw, y_draw), fill = color, alpha = 1 - intery % 1, back = back)
 
         if change:
             x_draw += 1
         else:
             y_draw += 1
-        new_color = set_intense(color, intery % 1, back)
         #draw_dot((x_draw, y_draw), fill = color, alpha = intery % 1, back = back)
+        prev_intery = int(intery)
         intery += gradient
+        if abs(int(intery) - prev_intery) != 0:
+            stairs += 1
         x += 1
+    return stairs
 
 
-def time_compare():
-    times = [0, 0, 0, 0, 0]
-    funcs = [cda_method, Brezenham_method, integer_Brezenham_method,
-             Brezenham_method_without_stairs, Wu_method]
+def stairs_research(func):
+    if func == 2:
+        func = cda_method
+    elif func == 3:
+        func = Brezenham_method
+    elif func == 4:
+        func = integer_Brezenham_method
+    elif func == 5:
+        func = Brezenham_method_without_stairs
+    elif func == 6:
+        func = Wu_method
+    else:
+        msg.showerror('Ошибка', 'Для проведения анализа нужно выбрать один \
+из алгоритмов, без учёта библиотечной ф-и')
+        return
+                        
+    stairs = [[], []]
+    angle_step = (5 * pi) / 180
+    i = 0
+    while i < 2 * pi:
+        xe = 100 * np.cos(i)
+        ye = 100 * np.sin(i)
 
-    for i in range(5):
-        t0 = time.clock()
-        for j in range(1000):
-            funcs[i]((0, 0), (599, 202), (0, 0, 0), (255, 255, 255))
-        t1 = time.clock() - t0
-        times[i] = t1
+        stairs[0].append(i * 180 / pi)
+        stairs[1].append(func([0, 0], [int(xe), int(ye)]))
 
-    funcs = ['Алгоритм ЦДА',
-             'Алгоритм Брезенхема',
-             'Целочисленный алгоритм\n\
-Брезенхема',
-             'Алгоритм Брезенхема с\n\
-устранением ступенчатости',
-             'Алгоритм Ву']
+        i += angle_step
 
     fig, ax = plt.subplots()
-    ax.barh(funcs, times)
-    ax.set_yticklabels(funcs, rotation = 45)
-    ax.set_xlabel('Время работы (в мс)')
-    ax.set_title('Временная характеристика алгоритмов')
 
-    for rect, cur_time in zip(ax.patches, times):
-        height = rect.get_height()
-        ax.annotate("{:.2f}".format(cur_time), (rect.get_width(),
-                               rect.get_y() + rect.get_height() / 2),
-                    xytext=(0, 5), textcoords="offset points",
-                    ha='left', va='center')
-    
-    plt.subplots_adjust(left = 0.21, right = 0.99)
-    fig.set_figwidth(8.5)
+    ax.plot(stairs[0], stairs[1])
+    ax.set_ylabel('Количество ступеней')
+    ax.set_xlabel('Угол поворота отн. Ox')
+    ax.set_title('Исследование ступенчатости (длина отрезка - 100 пикселей)')
     
     plt.show()
