@@ -228,10 +228,10 @@ def time_compare():
 
     for i in range(5):
         t0 = time.clock()
-        for j in range(1000):
+        for j in range(100):
             funcs[i]((0, 0), (599, 202), (0, 0, 0), (255, 255, 255))
         t1 = time.clock() - t0
-        times[i] = t1
+        times[i] = t1 * 10
 
     funcs = ['Алгоритм ЦДА',
              'Алгоритм Брезенхема',
