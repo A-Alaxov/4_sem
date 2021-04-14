@@ -75,11 +75,13 @@ def parametric_eq(centre, rad, color, canv):
         return
 
     dot = [rad, 0]
+    count = int(round(np.pi / 4 * rad))
     t = 0
-    while t <= np.pi / 4:
-        sym_oct(dot, centre, color, canv)
+    sym_oct(dot, centre, color, canv)
+    for i in range(count + 1):
         dot[0] = round(rad * np.cos(t))
         dot[1] = round(rad * np.sin(t))
+        sym_oct(dot, centre, color, canv)
         t += 1 / rad
 
 

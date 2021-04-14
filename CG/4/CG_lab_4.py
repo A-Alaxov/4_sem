@@ -254,18 +254,19 @@ def draw_conc_ovals(entr1, entr2, entr3, entr4, func, color, back):
     string.strip()
     if len(string) == 0:
         msg.showerror("Некорректный ввод",
-                      "Не введены шаги изменения полуосей")
+                      "Не введён шаг изменения полуоси Х")
         return
     try:
         step = [float(i) for i in string.split(" ")]
                 
-        if len(step) != 2 or int(step[0]) != step[0] or int(step[1]) != step[1]:
+        if len(step) != 1 or int(step[0]) != step[0]:
             raise BaseException("Must be doubled")
     except:
         msg.showerror("Некорректный ввод",
-                      "Введите шаги изменения полуосей в правильной форме\n\
-Например: 25 10")
+                      "Введите шаг изменения полуоси Х в правильной форме\n\
+Например: 25")
         return
+    step = int(step[0])
 
     string = entr4.get()
     string = " ".join(string.split())
@@ -302,19 +303,22 @@ def draw_conc_ovals(entr1, entr2, entr3, entr4, func, color, back):
     elif func == 5:
         func = lib_oval
 
+    eccentr = 1 - min(coefs) ** 2 / max(coefs) ** 2
     for i in range(count):
         func(centre, coefs, color, canv)
-        coefs[0] += step[0]
-        coefs[1] += step[1]
+        coefs[0] += step
+        if coefs[1] > coefs[0]:
+            coefs[1] = round(np.sqrt(coefs[0] * coefs[0] / (1 - eccentr)))
+        else:
+            coefs[1] = round(np.sqrt(coefs[0] * coefs[0] * (1 - eccentr)))
 
 
 def info():
-    msg.showinfo("Информация", "Компьютерная графика №3\n\
+    msg.showinfo("Информация", "Компьютерная графика №4\n\
 Разработчик: Алахов Андрей, ИУ7-42б\n\n\
-Эта программа позволяет выполняет отрисовку отрезков или спектров с помощью\
-различных алгоритмов. Также доступны опции сравнения временных характеристик\
-алгоритмов и исследования степенчатости выбранного алгоритма.\n\n\
-Для задания координат введите их в следующем формате: X  Y")
+Эта программа выполняет отрисовку окружностей или эллипсов с помощью \
+различных алгоритмов.\nТакже доступны опции построения концентрических \
+окружностей эллипсов и сравнения временных характеристик алгоритмов.")
 
 
 def main_init(table_app, canv):
@@ -336,94 +340,98 @@ def main_init(table_app, canv):
     entr2.insert(0, "200")
 
     #Эллипсы
+    info_text = ""
+    fant3 = tk.Label(table_app, text=info_text, font="12")
+    fant3.grid(row = 12, column = 0)
+    
     info_text = "Координаты центра эллипса:"
     lbl3 = tk.Label(table_app, text=info_text, font="12")
-    lbl3.grid(row = 12, column = 0)
+    lbl3.grid(row = 13, column = 0)
 
     entr3 = tk.Entry(table_app, width=15, font="12")
-    entr3.grid(row = 12, column = 1)
+    entr3.grid(row = 13, column = 1)
     entr3.insert(0, "300  300")
 
     info_text = "Полуоси эллипса:"
     lbl4 = tk.Label(table_app, text=info_text, font="12")
-    lbl4.grid(row = 13, column = 0)
+    lbl4.grid(row = 14, column = 0)
 
     entr4 = tk.Entry(table_app, width=15, font="12")
-    entr4.grid(row = 13, column = 1)
+    entr4.grid(row = 14, column = 1)
     entr4.insert(0, "250  50")
 
     #Концентрические окружности
     info_text = ""
     fant1 = tk.Label(table_app, text=info_text, font="12")
-    fant1.grid(row = 14, column = 0)
+    fant1.grid(row = 15, column = 0)
     
     info_text = "Координаты центра окружности:"
     lbl5 = tk.Label(table_app, text=info_text, font="12")
-    lbl5.grid(row = 15, column = 0)
+    lbl5.grid(row = 16, column = 0)
 
     entr5 = tk.Entry(table_app, width=15, font="12")
-    entr5.grid(row = 15, column = 1, sticky=tk.S)
+    entr5.grid(row = 16, column = 1, sticky=tk.S)
     entr5.insert(0, "300  300")
 
     info_text = "Радиус начальной окружности:"
     lbl6 = tk.Label(table_app, text=info_text, font="12")
-    lbl6.grid(row = 16, column = 0)
+    lbl6.grid(row = 17, column = 0)
 
     entr6 = tk.Entry(table_app, width=15, font="12")
-    entr6.grid(row = 16, column = 1)
+    entr6.grid(row = 17, column = 1)
     entr6.insert(0, "30")
 
     info_text = "Шаг изменения радиуса:"
     lbl7 = tk.Label(table_app, text=info_text, font="12")
-    lbl7.grid(row = 17, column = 0)
+    lbl7.grid(row = 18, column = 0)
 
     entr7 = tk.Entry(table_app, width=15, font="12")
-    entr7.grid(row = 17, column = 1)
+    entr7.grid(row = 18, column = 1)
     entr7.insert(0, "20")
 
     info_text = "Количество окружностей:"
     lbl8 = tk.Label(table_app, text=info_text, font="12")
-    lbl8.grid(row = 18, column = 0)
+    lbl8.grid(row = 19, column = 0)
 
     entr8 = tk.Entry(table_app, width=15, font="12")
-    entr8.grid(row = 18, column = 1)
+    entr8.grid(row = 19, column = 1)
     entr8.insert(0, "10")
 
     #Концентрические эллипсы
     info_text = ""
     fant2 = tk.Label(table_app, text=info_text, font="12")
-    fant2.grid(row = 19, column = 0)
+    fant2.grid(row = 20, column = 0)
     
     info_text = "Координаты центра эллипса:"
     lbl9 = tk.Label(table_app, text=info_text, font="12")
-    lbl9.grid(row = 20, column = 0)
+    lbl9.grid(row = 21, column = 0)
 
     entr9 = tk.Entry(table_app, width=15, font="12")
-    entr9.grid(row = 20, column = 1, sticky=tk.S)
+    entr9.grid(row = 21, column = 1, sticky=tk.S)
     entr9.insert(0, "300  300")
 
     info_text = "Полуоси начального эллипса:"
     lbl10 = tk.Label(table_app, text=info_text, font="12")
-    lbl10.grid(row = 21, column = 0)
+    lbl10.grid(row = 22, column = 0)
 
     entr10 = tk.Entry(table_app, width=15, font="12")
-    entr10.grid(row = 21, column = 1)
+    entr10.grid(row = 22, column = 1)
     entr10.insert(0, "25 10")
 
-    info_text = "Шаги изменения полуосей:"
+    info_text = "Шаги изменения полуоси Х:"
     lbl11 = tk.Label(table_app, text=info_text, font="12")
-    lbl11.grid(row = 22, column = 0)
+    lbl11.grid(row = 23, column = 0)
 
     entr11 = tk.Entry(table_app, width=15, font="12")
-    entr11.grid(row = 22, column = 1)
-    entr11.insert(0, "25 10")
+    entr11.grid(row = 23, column = 1)
+    entr11.insert(0, "25")
 
     info_text = "Количество эллипсов:"
     lbl12 = tk.Label(table_app, text=info_text, font="12")
-    lbl12.grid(row = 23, column = 0)
+    lbl12.grid(row = 24, column = 0)
 
     entr12 = tk.Entry(table_app, width=15, font="12")
-    entr12.grid(row = 23, column = 1)
+    entr12.grid(row = 24, column = 1)
     entr12.insert(0, "10")
     
     #Выборы
@@ -445,7 +453,7 @@ def main_init(table_app, canv):
              ('Библиотечная ф-я', 5)]
     row = 1
     for txt, func in names:
-        tk.Radiobutton(table_app, text = txt, value = func, variable = var,\
+        tk.Radiobutton(table_app, text = txt, value = func, variable = var,
                        font="12").grid(row=row, column = 0, sticky=tk.W)
         row += 1
 
@@ -455,78 +463,79 @@ def main_init(table_app, canv):
              ('Зелёный', (0, 255, 0)), ('Пурпурный', (128, 0, 128))]
     row = 1
     for txt, col in names:
-        tk.Radiobutton(table_app, text = txt, value = col, variable = col_var,\
+        tk.Radiobutton(table_app, text = txt, value = col, variable = col_var,
                        font="12").grid(row=row, column = 1, sticky=tk.W)
         row += 1
 
     back_var = tk.StringVar()
     row = 1
     for txt, col in names:
-        tk.Radiobutton(table_app, text = txt, value = col, variable = back_var,\
+        tk.Radiobutton(table_app, text = txt, value = col, variable = back_var,
                        font="12").grid(row=row, column = 2, sticky=tk.W)
         row += 1
 
     #Единичные
     btn1 = tk.Button(table_app, font="12",
-                     text="Построить окружность", bg = "#00FF00",
+                     text="Построить\nокружность", bg = "#00FF00",
                      command=lambda : draw_circle(entr1, entr2, var.get(),
                                                   col_var.get(),
                                                   back_var.get()))
     btn1.grid(row = 10, column = 2, rowspan = 2, sticky = "nwes")
     btn2 = tk.Button(table_app, font="12",
-                     text="Построить эллипс", bg = "#00FF00",
+                     text="Построить\nэллипс", bg = "#00FF00",
                      command=lambda : draw_ellipse(entr3, entr4, var.get(),
                                                 col_var.get(), back_var.get()))
-    btn2.grid(row = 12, column = 2, rowspan = 2, sticky = "nwes")
+    btn2.grid(row = 13, column = 2, rowspan = 2, sticky = "nwes")
     
     #Концентрические
     btn1 = tk.Button(table_app, font="12",
-                     text="Построить окружность", bg = "#00FF00",
+                     text="Построить\nконцентрические\nокружности",
+                     bg = "#00FF00",
                      command=lambda : draw_conc_circles(entr5, entr6, entr7,
                                                         entr8, var.get(),
                                                         col_var.get(),
                                                         back_var.get()))
-    btn1.grid(row = 15, column = 2, rowspan = 4, sticky = "nwes")
+    btn1.grid(row = 16, column = 2, rowspan = 4, sticky = "nwes")
     btn2 = tk.Button(table_app, font="12",
-                     text="Построить эллипс", bg = "#00FF00",
+                     text="Построить\nконцентрические\nэллипсы", bg = "#00FF00",
                      command=lambda : draw_conc_ovals(entr9, entr10, entr11,
                                                       entr12, var.get(),
                                                       col_var.get(),
                                                       back_var.get()))
-    btn2.grid(row = 20, column = 2, rowspan = 4, sticky = "nwes")
+    btn2.grid(row = 21, column = 2, rowspan = 4, sticky = "nwes")
     
     #Прочее
     btn3 = tk.Button(table_app, font="Arial 12",
                      text="Очистить", bg = "pale green",
                      command=lambda : canv.delete("all"))
-    btn3.grid(row = 25, column = 1, rowspan = 2, sticky = "nwes")
+    btn3.grid(row = 26, column = 1, rowspan = 2, sticky = "nwes")
     btn4 = tk.Button(table_app, font="Arial 12",
-                     text="Сравнить время построения окружностей", bg = "#00FF00",
-                     command=lambda : time_compare())
-    btn4.grid(row = 25, column = 0, sticky = tk.W + tk.E)
+                     text="Сравнить время построения окружностей",
+                     bg = "#00FF00", command=lambda : time_compare())
+    btn4.grid(row = 26, column = 0, sticky = tk.W + tk.E)
     btn5 = tk.Button(table_app, font="Arial 12",
-                     text="Сравнить время построения эллипсов", bg = "#00FF00",
-                     command=lambda : time_comp_ovals())
-    btn5.grid(row = 26, column = 0, sticky = tk.W + tk.E)
+                     text="Сравнить время построения эллипсов",
+                     bg = "#00FF00", command=lambda : time_comp_ovals())
+    btn5.grid(row = 27, column = 0, sticky = tk.W + tk.E)
     btn6 = tk.Button(table_app, font="Arial 12",
                      text="Информация", bg = "dark sea green",
                      command=lambda : info())
-    btn6.grid(row = 25, column = 2, rowspan = 2, sticky = "nwes")
+    btn6.grid(row = 26, column = 2, rowspan = 2, sticky = "nwes")
 
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = tk.Frame(root)
     app.grid()
-    root.title("Компьютерная графика №3")
-    root.geometry((str(1500) + 'x' + str(600)))
+    root.title("Компьютерная графика №4")
+    root.geometry((str(1200) + 'x' + str(630)))
     root.resizable(False, False)
 
     global canv
     canv = tk.Canvas(root, width=600,
         height=600, bg="#ffffff")
 
-    canv.grid(row = 0, column = 4, rowspan = 5)
+    canv.grid(row = 0, column = 4)
 
     main_init(app, canv)
 

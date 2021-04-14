@@ -40,11 +40,13 @@ def parametric_eq(centre, rad, color, canv):
         return
 
     dot = [rad, 0]
+    count = int(round(np.pi / 4 * rad))
     t = 0
-    while t <= np.pi / 4:
-        #sym_oct(dot, centre, color, canv)
+    #sym_oct(dot, centre, color, canv)
+    for i in range(count + 1):
         dot[0] = round(rad * np.cos(t))
         dot[1] = round(rad * np.sin(t))
+        #sym_oct(dot, centre, color, canv)
         t += 1 / rad
 
 
@@ -307,11 +309,12 @@ def time_comp_ovals():
     funcs = [canonical_oval, parametric_oval, Brezenham_oval,
              midpoint_oval]
 
+    eccentr = 1 - 50 ** 2 / 100 ** 2
     tmp = []
     for i in range(4):
         tmp.clear()
         for rad in data[0]:
-            ax2 = round(np.sqrt(rad / 2))
+            ax2 = round(np.sqrt(rad ** 2 * (1 - eccentr)))
             t0 = time.clock()
             for j in range(100):
                 funcs[i]((0, 0), [rad, ax2], '', '')
