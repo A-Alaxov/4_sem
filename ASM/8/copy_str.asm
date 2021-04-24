@@ -8,20 +8,34 @@ copy_str PROC C old_str:dword, new_str:dword, len:dword
 
 	mov ecx, [len + 4]
 
-	mov eax, [old_str + 4]
-	mov edx, [new_str + 4]
+	mov esi, [old_str + 4]
+	mov edi, [new_str + 4]
 
-	xor ebx, ebx
-	copy:
-		mov bl, [eax]
-		mov [edx], bl
-		inc eax
-		inc edx
+	cld
+	cmp esi, edi
+	jge continue
 
-		loop copy
+	add esi, ecx
+	add edi, ecx
+	std
 
-	mov al, 0
-	mov [edx], al
+	continue:
+	inc ecx
+	rep movsb
+	cld
+
+	;old version with handle copying
+	;mov eax, [old_str + 4]
+	;mov edx, [new_str + 4]
+
+	;xor ebx, ebx
+	;copy:
+	;	mov bl, [eax]
+	;	mov [edx], bl
+	;	inc eax
+	;	inc edx
+
+	;	loop copy
 
 	pop ebp
 	ret
