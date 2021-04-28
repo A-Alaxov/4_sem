@@ -23,7 +23,7 @@ public:
     virtual const char *what() const noexcept override
     {
         char *cer_msg = new char[er_msg.length() + 12];
-        strcpy(cer_msg, std::string("LIST ERROR\n" + er_msg).c_str());
+        strcpy(cer_msg, std::string("SET ERROR\n" + er_msg).c_str());
 
         return cer_msg;
     }
@@ -60,6 +60,24 @@ public:
     {
         char *cer_msg = new char[er_msg.length() + 18];
         strcpy(cer_msg, std::string("INVALID ITERATOR\n" + er_msg).c_str());
+
+        return cer_msg;
+    }
+};
+
+class set_creation_by_array_exception : public set_exception
+{
+public:
+    set_creation_by_array_exception(const std::string &time, const std::string &file_name,
+                   const std::string &class_name, const std::string &method_name)
+        :set_exception(time, file_name, class_name, method_name)
+    {
+    }
+
+    virtual const char *what() const noexcept override
+    {
+        char *cer_msg = new char[er_msg.length() + 15];
+        strcpy(cer_msg, std::string("ERROR IN CREATION BY ARRAY\n" + er_msg).c_str());
 
         return cer_msg;
     }

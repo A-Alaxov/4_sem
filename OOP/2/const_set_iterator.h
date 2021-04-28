@@ -24,7 +24,7 @@ public:
     operator bool();
 
     const T &operator *() const;
-    const T &operator ->() const;
+    const T *operator ->() const;
 
     const_set_iterator<T> &operator =(const const_set_iterator<T> &iterator);
 
@@ -41,7 +41,7 @@ public:
     bool operator !=(const const_set_iterator<T> &iterator) const;
     bool operator ==(const const_set_iterator<T> &iterator) const;
 
-    template<typename U>
+    template <typename Type>
     friend class set;
 
 private:

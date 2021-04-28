@@ -4,7 +4,7 @@
 #include <chrono>
 
 #include "set_expectations.h"
-#include "set_iterator.h"
+//#include "set_iterator.h"
 
 //namespace container
 //{
@@ -47,7 +47,7 @@ void set_iterator<T>::prev()
 template <typename T>
 set_iterator<T>::operator bool()
 {
-    return cur.expired();
+    return !cur.expired();
 }
 
 template <typename T>
@@ -63,7 +63,7 @@ T &set_iterator<T>::operator *()
 }
 
 template <typename T>
-T &set_iterator<T>::operator ->()
+T *set_iterator<T>::operator ->()
 {
     if (cur.expired())
     {

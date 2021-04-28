@@ -36,7 +36,7 @@ private:
     T data;
     std::shared_ptr<set_node<T>> next;
     std::shared_ptr<set_node<T>> prev;
-    };
+};
 //}
 
 #include "set_node.hpp"

@@ -4,8 +4,21 @@
 //namespace container
 //{
 template  <typename T>
+set_node<T>::set_node(const T &data)
+    :data(data), next(nullptr), prev(nullptr)
+{
+}
+
+
+template  <typename T>
 set_node<T>::set_node(const T &data, const std::shared_ptr<set_node<T>> &next, const std::shared_ptr<set_node<T>> &prev)
     :data(data), next(next), prev(prev)
+{
+}
+
+template  <typename T>
+set_node<T>::set_node(const std::shared_ptr<set_node<T>> &node)
+    :data(node->data), next(node->next), prev(node->prev)
 {
 }
 

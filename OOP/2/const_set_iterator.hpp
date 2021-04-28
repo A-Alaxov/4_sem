@@ -47,7 +47,7 @@ void const_set_iterator<T>::prev()
 template <typename T>
 const_set_iterator<T>::operator bool()
 {
-    return cur.expired();
+    return !cur.expired();
 }
 
 template <typename T>
@@ -63,7 +63,7 @@ const T &const_set_iterator<T>::operator *() const
 }
 
 template <typename T>
-const T &const_set_iterator<T>::operator ->() const
+const T *const_set_iterator<T>::operator ->() const
 {
     if (cur.expired())
     {
