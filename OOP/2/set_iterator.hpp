@@ -4,10 +4,7 @@
 #include <chrono>
 
 #include "set_expectations.h"
-//#include "set_iterator.h"
 
-//namespace container
-//{
 template <typename T>
 set_iterator<T>::set_iterator()
     :cur(std::weak_ptr<set_node<T>>())
@@ -182,6 +179,5 @@ bool set_iterator<T>::operator ==(const set_iterator<T> &iterator) const
 {
     return cur.lock() == iterator.cur.lock();
 }
-//}
 
 #endif // SET_ITERATOR_HPP

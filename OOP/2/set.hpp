@@ -3,10 +3,7 @@
 
 #include <iostream>
 #include <chrono>
-//#include "set.h"
 
-//namespace container
-//{
 template  <typename T>
 set<T>::set()
     :head(nullptr), tail(nullptr), size(0)
@@ -73,10 +70,10 @@ set<T>::set(iter begin, iter end)
 }
 
 template <typename T>
-bool set<T>::append(const T &data)
+set<T> &set<T>::append(const T &data)
 {
     if (find(data))
-        return false;
+        return *this;
 
     std::shared_ptr<set_node<T>> node;
 
@@ -102,29 +99,31 @@ bool set<T>::append(const T &data)
     }
 
     size++;
-    return true;
+    return *this;
 }
 
 template <typename T>
-void set<T>::append(const set<T> &s)
+set<T> &set<T>::append(const set<T> &s)
 {
     for (auto it = s.begin(); it != s.end(); it++)
         append(*it);
+    return *this;
 }
 
 template <typename T>
-void set<T>::append(std::initializer_list<T> elems)
+set<T> &set<T>::append(const std::initializer_list<T> &elems)
 {
     for (auto it : elems)
         append(it);
+    return *this;
 }
 
 template <typename T>
-bool set<T>::subtract(const T &data)
+set<T> &set<T>::subtract(const T &data)
 {
     const_set_iterator<T> it = find(data);
     if (!it)
-        return false;
+        return *this;
 
     auto node = std::make_shared<set_node<T>>(it.cur.lock());
 
@@ -150,68 +149,22 @@ bool set<T>::subtract(const T &data)
     }
 
     size--;
-    return true;
+    return *this;
 }
 
 template <typename T>
-void set<T>::subtract(const set<T> &s)
+set<T> &set<T>::subtract(const set<T> &s)
 {
     for (auto it = s.begin(); it != s.end(); it++)
         subtract(*it);
+    return *this;
 }
 
 template <typename T>
-void set<T>::subtract(std::initializer_list<T> elems)
+set<T> &set<T>::subtract(const std::initializer_list<T> &elems)
 {
     for (auto it : elems)
         subtract(it);
-}
-
-template <typename T>
-set<T> &set<T>::add(const set<T> &s)
-{
-    set<T> temp(*this + s);
-
-    clear();
-    for (auto it = temp.begin(); it != temp.end(); it++)
-        append(*it);
-
-    return *this;
-}
-
-template <typename T>
-set<T> &set<T>::add(const T &data)
-{
-    set<T> temp(*this + data);
-
-    clear();
-    for (auto it = temp.begin(); it != temp.end(); it++)
-        append(*it);
-
-    return *this;
-}
-
-template <typename T>
-set<T> &set<T>::sub(const set<T> &s)
-{
-    set<T> temp(*this - s);
-
-    clear();
-    for (auto it = temp.begin(); it != temp.end(); it++)
-        append(*it);
-
-    return *this;
-}
-
-template <typename T>
-set<T> &set<T>::sub(const T &data)
-{
-    set<T> temp(*this - data);
-
-    clear();
-    for (auto it = temp.begin(); it != temp.end(); it++)
-        append(*it);
-
     return *this;
 }
 
@@ -471,6 +424,63 @@ set<T> &set<T>::operator |=(const T &data)
 }
 
 template <typename T>
+bool set<T>::belong(const T &data) const
+{
+    return find(data);
+}
+
+template <typename T>
+bool set<T>::belong(const set<T> &s) const
+{
+    bool res = true;
+    for (auto it = begin(); it != end(); it++)
+    {
+        if (!res)
+            return res;
+        res = s.find(*it);
+    }
+    return res;
+}
+
+template <typename T>
+bool set<T>::operator <(const T &data) const
+{
+    return (find(data) && size > 1);
+}
+
+template <typename T>
+bool set<T>::operator <=(const T &data) const
+{
+    return find(data);
+}
+
+template <typename T>
+bool set<T>::operator <(const set<T> &s) const
+{
+    bool res = size < s.size;
+    for (auto it = begin(); it != end(); it++)
+    {
+        if (!res)
+            return res;
+        res = s.find(*it);
+    }
+    return res;
+}
+
+template <typename T>
+bool set<T>::operator <=(const set<T> &s) const
+{
+    bool res = true;
+    for (auto it = begin(); it != end(); it++)
+    {
+        if (!res)
+            return res;
+        res = s.find(*it);
+    }
+    return res;
+}
+
+template <typename T>
 set<T> &set<T>::operator =(const set<T> &s)
 {
     clear();
@@ -584,6 +594,5 @@ set<T>::operator bool() const
 {
     return size;
 }
-//}
 
 #endif // SET_HPP

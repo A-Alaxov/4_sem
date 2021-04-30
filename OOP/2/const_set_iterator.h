@@ -3,17 +3,13 @@
 
 #include <iterator>
 
-//#include "set.h"
 #include "set_node.h"
 
-//namespace container
-//{
 template <typename T>
 class const_set_iterator : std::iterator<std::bidirectional_iterator_tag, set_node<T>>
 {
 public:
     const_set_iterator();
-    explicit const_set_iterator(const std::shared_ptr<set_node<T>> &node);
     const_set_iterator(const const_set_iterator<T> &iterator);
 
     ~const_set_iterator() = default;
@@ -45,9 +41,9 @@ public:
     friend class set;
 
 private:
+    explicit const_set_iterator(const std::shared_ptr<set_node<T>> &node);
     std::weak_ptr<set_node<T>> cur;
 };
-//}
 
 #include "const_set_iterator.hpp"
 

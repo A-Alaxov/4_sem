@@ -295,49 +295,6 @@ void test_subtract_init_list()
     }
 }
 
-void test_add_elem_method()
-{
-    std::cout << "test_add_elem_method" << std::endl;
-    try
-    {
-        long ar[7] = {1, 2, 3, 4, 5, 6};
-        long size = 6;
-        set<long> l {1, 2, 3, 4, 5};
-        l.add((long) 6);
-        bool test = cmp<long>(ar, size, l);
-        if (test)
-            std::cout << "Passed\n" << std::endl;
-        else
-            std::cout << "Failed\n" << std::endl;
-    }
-    catch (set_exception &error)
-    {
-        std::cout << error.what() << std::endl;
-    }
-}
-
-void test_add_set_method()
-{
-    std::cout << "test_add_set_method" << std::endl;
-    try
-    {
-        long ar[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        long size = 10;
-        set<long> l1 {1, 2, 3, 4, 5};
-        set<long> l2 {6, 7, 8, 9, 10};
-        l1.add(l2);
-        bool test = cmp<long>(ar, size, l1);
-        if (test)
-            std::cout << "Passed\n" << std::endl;
-        else
-            std::cout << "Failed\n" << std::endl;
-    }
-    catch (set_exception &error)
-    {
-        std::cout << error.what() << std::endl;
-    }
-}
-
 void test_add_elem()
 {
     std::cout << "test_add_elem" << std::endl;
@@ -412,49 +369,6 @@ void test_add_eq_set()
         set<long> l1 {1, 2, 3, 4, 5};
         set<long> l2 {6, 7, 8, 9, 10};
         l1 += l2;
-        bool test = cmp<long>(ar, size, l1);
-        if (test)
-            std::cout << "Passed\n" << std::endl;
-        else
-            std::cout << "Failed\n" << std::endl;
-    }
-    catch (set_exception &error)
-    {
-        std::cout << error.what() << std::endl;
-    }
-}
-
-void test_sub_elem_method()
-{
-    std::cout << "test_sub_elem_method" << std::endl;
-    try
-    {
-        long ar[7] = {1, 2, 3, 4};
-        long size = 4;
-        set<long> l {1, 2, 3, 4, 5};
-        l.sub((long) 5);
-        bool test = cmp<long>(ar, size, l);
-        if (test)
-            std::cout << "Passed\n" << std::endl;
-        else
-            std::cout << "Failed\n" << std::endl;
-    }
-    catch (set_exception &error)
-    {
-        std::cout << error.what() << std::endl;
-    }
-}
-
-void test_sub_set_method()
-{
-    std::cout << "test_sub_set_method" << std::endl;
-    try
-    {
-        long ar[10] = {1, 2};
-        long size = 2;
-        set<long> l1 {1, 2, 3, 4, 5};
-        set<long> l2 {3, 4, 5, 6, 7};
-        l1.sub(l2);
         bool test = cmp<long>(ar, size, l1);
         if (test)
             std::cout << "Passed\n" << std::endl;
@@ -811,6 +725,117 @@ void test_log_and_eq_set()
     }
 }
 
+void test_belong_elem_method()
+{
+    std::cout << "test_belong_elem_method" << std::endl;
+    try
+    {
+        set<long> l {1, 2, 3, 4, 5};
+        bool test = l.belong((long) 5);
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
+void test_belong_set_method()
+{
+    std::cout << "test_belong_set_method" << std::endl;
+    try
+    {
+        set<long> l1 {1, 2, 3, 4, 5};
+        set<long> l2 {3, 4, 5, 6, 7};
+        bool test = !l1.belong(l2);;
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
+void test_belong_elem()
+{
+    std::cout << "test_belong_elem" << std::endl;
+    try
+    {
+        set<long> l {1, 2, 3, 4, 5};
+        bool test = !(l < (long) 6);
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
+void test_belong_set()
+{
+    std::cout << "test_belong_set" << std::endl;
+    try
+    {
+        set<long> l1 {1, 3, 4};
+        set<long> l2 {2, 5, 3, 4, 1};
+        bool test = (l1 < l2);
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
+void test_belong_eq_elem()
+{
+    std::cout << "test_belong_eq_elem" << std::endl;
+    try
+    {
+        set<long> l {1, 2, 3, 4, 5};
+        bool test = (l <= (long) 1);
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
+void test_belong_eq_set()
+{
+    std::cout << "test_belong_eq_set" << std::endl;
+    try
+    {
+        set<long> l1 {1, 2, 3, 4, 5};
+        set<long> l2 {1, 2, 3, 4, 5};
+        bool test = (l1 <= l2);
+        if (test)
+            std::cout << "Passed\n" << std::endl;
+        else
+            std::cout << "Failed\n" << std::endl;
+    }
+    catch (set_exception &error)
+    {
+        std::cout << error.what() << std::endl;
+    }
+}
+
 void test_log_or_elem_method()
 {
     std::cout << "test_log_or_elem_method" << std::endl;
@@ -940,24 +965,6 @@ void test_log_or_eq_set()
     }
 }
 
-void test_find()
-{
-    std::cout << "test_find" << std::endl;
-    try
-    {
-        set<long> l1 {1, 2, 3, 4, 5};
-        bool test = l1.find(3);
-        if (test)
-            std::cout << "Passed\n" << std::endl;
-        else
-            std::cout << "Failed\n" << std::endl;
-    }
-    catch (set_exception &error)
-    {
-        std::cout << error.what() << std::endl;
-    }
-}
-
 void test_assignment()
 {
     std::cout << "test_assignment" << std::endl;
@@ -1056,15 +1063,11 @@ int main()
     test_subtract_set();
     test_subtract_init_list();
 
-    test_add_elem_method();
-    test_add_set_method();
     test_add_elem();
     test_add_set();
     test_add_eq_elem();
     test_add_eq_set();
 
-    test_sub_elem_method();
-    test_sub_set_method();
     test_sub_elem();
     test_sub_set();
     test_sub_eq_elem();
@@ -1091,9 +1094,15 @@ int main()
     test_log_or_eq_elem();
     test_log_or_eq_set();
 
+    test_belong_elem_method();
+    test_belong_set_method();
+    test_belong_elem();
+    test_belong_set();
+    test_belong_eq_elem();
+    test_belong_eq_set();
+
     test_assignment();
     test_shallow_assignment();
     test_equal();
     test_not_equal();
-    test_find();
 }

@@ -3,8 +3,6 @@
 
 #include <memory>
 
-//namespace container
-//{
 template <typename T>
 class set_node
 {
@@ -37,7 +35,6 @@ private:
     std::shared_ptr<set_node<T>> next;
     std::shared_ptr<set_node<T>> prev;
 };
-//}
 
 #include "set_node.hpp"
 

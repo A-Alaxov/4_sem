@@ -1,8 +1,6 @@
 #ifndef SET_NODE_HPP
 #define SET_NODE_HPP
 
-//namespace container
-//{
 template  <typename T>
 set_node<T>::set_node(const T &data)
     :data(data), next(nullptr), prev(nullptr)
@@ -103,6 +101,5 @@ bool set_node<T>::operator !=(const std::shared_ptr<set_node<T>> &node) const
 {
     return this != node;
 }
-//}
 
 #endif // SET_NODE_HPP
