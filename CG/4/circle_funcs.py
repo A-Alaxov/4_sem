@@ -75,13 +75,13 @@ def parametric_eq(centre, rad, color, canv):
         return
 
     dot = [rad, 0]
-    count = int(round(np.pi / 4 * rad))
+    count = int(round(np.pi / 2 * rad))
     t = 0
-    sym_oct(dot, centre, color, canv)
+    sym_ox(dot, centre, color, canv)
     for i in range(count + 1):
         dot[0] = round(rad * np.cos(t))
         dot[1] = round(rad * np.sin(t))
-        sym_oct(dot, centre, color, canv)
+        sym_ox(dot, centre, color, canv)
         t += 1 / rad
 
 
@@ -113,19 +113,10 @@ def Brezenham_method(centre, rad, color, canv):
                 X += 1
                 Y -= 1
                 D += 2 * (X - Y + 1)
-        elif D == 0:
+        else:
             X += 1
             Y -= 1
             D += 2 * (X - Y + 1)
-        else:
-            D2 = 2 * D - 2 * X - 1
-            if D2 <= 0:
-                X += 1
-                Y -= 1
-                D += 2 * (X - Y + 1)
-            else:
-                Y -= 1
-                D += -2 * Y + 1
         sym_oct([X, Y], centre, color, canv)
 
 

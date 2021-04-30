@@ -120,7 +120,7 @@ def midpoint_method(centre, rad, color, canv):
 
 
 def time_compare():
-    data = [[i for i in range(100, 1100, 100)]]
+    data = [[i for i in range(50, 550, 50)]]
     funcs = [canonical_eq, parametric_eq, Brezenham_method,
              midpoint_method]
 
@@ -129,7 +129,7 @@ def time_compare():
         tmp.clear()
         for rad in data[0]:
             t0 = time.clock()
-            for j in range(100):
+            for j in range(1000):
                 funcs[i]((0, 0), rad, '', '')
             t1 = time.clock() - t0
             tmp.append(t1 * 10)
@@ -305,18 +305,18 @@ def midpoint_oval(centre, axes, color, canv):
 
 
 def time_comp_ovals():
-    data = [[i for i in range(100, 1100, 100)]]
+    data = [[i for i in range(50, 550, 50)]]
     funcs = [canonical_oval, parametric_oval, Brezenham_oval,
              midpoint_oval]
 
-    eccentr = 1 - 50 ** 2 / 100 ** 2
+    eccentr = 1 - 25 ** 2 / 50 ** 2
     tmp = []
     for i in range(4):
         tmp.clear()
         for rad in data[0]:
             ax2 = round(np.sqrt(rad ** 2 * (1 - eccentr)))
             t0 = time.clock()
-            for j in range(100):
+            for j in range(1000):
                 funcs[i]((0, 0), [rad, ax2], '', '')
             t1 = time.clock() - t0
             tmp.append(t1 * 10)
