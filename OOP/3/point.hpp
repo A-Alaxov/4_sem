@@ -6,15 +6,17 @@ class point
 {
 public:
     point();
-    ~point();
+    point(const double x, const double y, const double z);
+    ~point() = default;
 
-    double get_x();
-    double get_y();
-    double get_z();
+    double get_x() const { return x; };
+    void set_x(double x) { this->x = x; };
 
-    void set_x(double x);
-    void set_y(double y);
-    void set_z(double z);
+    double get_y() const { return y; };
+    void set_y(double y) { this->y = y; };
+
+    double get_z() const { return z; };
+    void set_z(double z) { this->z = z; };
 
     void move();
     void scale();

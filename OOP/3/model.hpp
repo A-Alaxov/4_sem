@@ -8,11 +8,20 @@ class model : public visible_object
 {
 public:
     model();
-    ~model();
+    model(const model &_model);
+    model(model &&_model) noexcept;
+    ~model() = default;
 
-    void accept() override;
+    void accept(std::shared_ptr<visitor> _visitor) override;
     bool is_composite() override { return false; }
-    void reform() override;
+    void reform() override {};
+
+    void add_point(point pt);
+    void add_edge(edge ed);
+    const std::shared_ptr<details> get_details() const { return _details; };
+
+    model &operator=(const model &_model);
+    model &operator=(model &&_model) noexcept;
 
 private:
     std::shared_ptr<details> _details;

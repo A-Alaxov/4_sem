@@ -11,31 +11,49 @@ CONFIG += c++11
 SOURCES += \
     builder.cpp \
     commands.cpp \
+    composite.cpp \
     controller.cpp \
+    creator.cpp \
     details.cpp \
+    draw_manager.cpp \
+    drawer.cpp \
+    drawer_factory.cpp \
     edge.cpp \
     errors.cpp \
     facade.cpp \
-    loader.cpp \
     main.cpp \
     mainwindow.cpp \
     model.cpp \
+    model_loader.cpp \
     object.cpp \
-    point.cpp
+    point.cpp \
+    scene.cpp \
+    scene_manager.cpp \
+    source_loader.cpp \
+    visitor.cpp
 
 HEADERS += \
     builder.hpp \
     commands.hpp \
+    composite.hpp \
     controller.hpp \
+    creator.hpp \
     details.hpp \
+    draw_manager.hpp \
+    drawer.hpp \
+    drawer_factory.hpp \
     edge.hpp \
     errors.hpp \
     facade.hpp \
-    loader.hpp \
     mainwindow.hpp \
     model.hpp \
+    model_loader.hpp \
     object.hpp \
-    point.hpp
+    point.hpp \
+    scene.hpp \
+    scene_manager.hpp \
+    source_loader.hpp \
+    visitor.hpp
 
 FORMS += \
     mainwindow.ui

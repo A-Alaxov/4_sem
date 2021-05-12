@@ -30,9 +30,20 @@ class file_error : public base_error
 public:
     file_error(const std::string &er_msg) : base_error(er_msg) {}
 
-    virtual const char *what() const noexcept override
+    const char *what() const noexcept override
     {
         return "File error";
+    }
+};
+
+class builder_error : public base_error
+{
+public:
+    builder_error(const std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "Builder error";
     }
 };
 

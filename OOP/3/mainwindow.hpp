@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 
+#include "facade.hpp"
+#include "drawer.hpp"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -16,6 +19,13 @@ class MainWindow : public QMainWindow {
 public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
+
+protected:
+  void setup_scene();
+
+  void update_scene();
+
+  void clear_scene();
 
 private slots:
   void on_add_cam_clicked();
@@ -37,6 +47,9 @@ private slots:
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;
+
+  std::unique_ptr<facade> _facade;
+  std::shared_ptr<base_drawer> drawer;
 
   void draw();
   void print_message(char str[]);

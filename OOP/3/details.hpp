@@ -2,24 +2,28 @@
 #define DETAILS_HPP
 
 #include <memory>
+#include <vector>
+
 #include "point.hpp"
 #include "edge.hpp"
 
 class details
 {
 public:
-    details();
-    ~details();
+    details() = default;
+    ~details() = default;
 
-    void add_point();
-    void add_edge();
+    void add_point(point pt);
+    void add_edge(edge ed);
+
     void reform();
-    void get_point();
-    void get_edges();
+
+    std::vector<point> get_points();
+    std::vector<edge> get_edges();
 
 private:
-    std::shared_ptr<point> points;
-    std::shared_ptr<edge> edges;
+    std::vector<point> points;
+    std::vector<edge> edges;
 };
 
 #endif // DETAILS_HPP

@@ -12,7 +12,7 @@ public:
     void execute_command(std::shared_ptr<base_command> command);
 
 private:
-    std::shared_ptr<base_controller> controller;
+    std::shared_ptr<base_controller> _controller;
 };
 
 #endif // FACADE_HPP

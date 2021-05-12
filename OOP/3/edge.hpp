@@ -6,7 +6,8 @@ class edge
 {
 public:
     edge();
-    ~edge();
+    edge(const long point1, const long point2);
+    ~edge() = default;
 
     long get_first();
     void set_first(long index);
