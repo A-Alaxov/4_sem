@@ -16,7 +16,7 @@ public:
     void add_point(point pt);
     void add_edge(edge ed);
 
-    void reform();
+    void reform(point &move, point &scale, point &rotate);
 
     std::vector<point> get_points();
     std::vector<edge> get_edges();

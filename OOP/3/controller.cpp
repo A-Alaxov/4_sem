@@ -23,3 +23,9 @@ void controller::draw_scene(std::shared_ptr<base_drawer> _drawer)
     //_drawer_manager->set_cam(_scene_manager.get_cam());
     _scene_manager.get_scene()->get_models()->accept(_drawer_manager);
 }
+
+void controller::reform_model(long &model_index, point &move, point &scale, point &rotate)
+{
+    std::shared_ptr<object> model = _scene_manager.get_scene()->get_models()->get_objects()[model_index - 1];
+    _reform_manager.reform_model(model, move, scale, rotate);
+}

@@ -27,6 +27,7 @@ SOURCES += \
     model_loader.cpp \
     object.cpp \
     point.cpp \
+    reform_manager.cpp \
     scene.cpp \
     scene_manager.cpp \
     source_loader.cpp \
@@ -50,6 +51,7 @@ HEADERS += \
     model_loader.hpp \
     object.hpp \
     point.hpp \
+    reform_manager.hpp \
     scene.hpp \
     scene_manager.hpp \
     source_loader.hpp \

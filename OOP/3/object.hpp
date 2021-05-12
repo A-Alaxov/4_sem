@@ -3,7 +3,9 @@
 
 #include <memory>
 #include <vector>
+
 #include "visitor.hpp"
+#include "point.hpp"
 
 class object
 {
@@ -19,7 +21,7 @@ public:
     virtual void accept(std::shared_ptr<visitor> _visitor) = 0;
     virtual bool is_composite() = 0;
     virtual bool is_visible() = 0;
-    virtual void reform() = 0;
+    virtual void reform(point &move, point &scale, point &rotate) = 0;
 };
 
 class visible_object : public object

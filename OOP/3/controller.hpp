@@ -4,6 +4,7 @@
 #include "model_loader.hpp"
 #include "scene_manager.hpp"
 #include "draw_manager.hpp"
+#include "reform_manager.hpp"
 
 class base_controller
 {
@@ -19,9 +20,8 @@ public:
     virtual void remove_camera() = 0;
     */
     virtual void draw_scene(std::shared_ptr<base_drawer> _drawer) = 0;
+    virtual void reform_model(long &model_index, point &move, point &scale, point &rotate) = 0;
     /*
-    virtual void reform_model() = 0;
-    virtual void reform_models() = 0;
     virtual void reform_camera() = 0;
     */
 };
@@ -41,15 +41,14 @@ public:
     void remove_camera() override;
     */
     void draw_scene(std::shared_ptr<base_drawer> _drawer) override;
+    void reform_model(long &model_index, point &move, point &scale, point &rotate) override;
     /*
-    void reform_model() override;
-    void reform_models() override;
     void reform_camera() override;
     */
 
 private:
     scene_manager _scene_manager;
-    //reform_manager _reform_manager;
+    reform_manager _reform_manager;
     std::shared_ptr<base_model_loader> loader;
     std::shared_ptr<draw_manager> _drawer_manager;
 };

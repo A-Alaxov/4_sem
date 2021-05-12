@@ -30,6 +30,11 @@ void model::accept(std::shared_ptr<visitor> _visitor)
     _visitor->visit_model(*this);
 }
 
+void model::reform(point &move, point &scale, point &rotate)
+{
+    _details->reform(move, scale, rotate);
+}
+
 model &model::operator=(const model &_model)
 {
     if (this != &_model)

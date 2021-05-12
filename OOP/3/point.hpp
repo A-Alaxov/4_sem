@@ -18,11 +18,12 @@ public:
     double get_z() const { return z; };
     void set_z(double z) { this->z = z; };
 
-    void move();
-    void scale();
-    void rotate();
+    void move(point &move);
+    void scale(point &scale);
+    void rotate(point &rotate);
 
 private:
+    void rotate_in_flat(double &coord_1, double &coord_2, double &angle);
     double x;
     double y;
     double z;

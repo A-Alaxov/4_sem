@@ -14,7 +14,7 @@ public:
 
     void accept(std::shared_ptr<visitor> _visitor) override;
     bool is_composite() override { return false; }
-    void reform() override {};
+    void reform(point &move, point &scale, point &rotate) override;
 
     void add_point(point pt);
     void add_edge(edge ed);

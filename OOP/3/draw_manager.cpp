@@ -37,7 +37,7 @@ point draw_manager::get_projection(point &_point)
 {
     point projection(_point);
     projection.set_x(_point.get_y() - _point.get_x() * sqrt(3) / 2);
-    projection.set_y(_point.get_z() / 2 - _point.get_z());
+    projection.set_y(_point.get_x() / 2 - _point.get_z());
 
     return projection;
 }
