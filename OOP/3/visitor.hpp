@@ -12,7 +12,7 @@ public:
     virtual ~visitor() =default;
 
     virtual void visit_model(model &_model) = 0;
-    //virtual void visit_camera(camera &_camera) = 0;
+    virtual void visit_camera(camera &_camera) = 0;
     virtual void visit_composite(composite &_composite) = 0;
 };
 

@@ -7,10 +7,9 @@
 class reform_manager
 {
 public:
-    void reform_model(std::shared_ptr<object> obj, point &move, point &scale, point &rotate);
-
-private:
-    point deg_to_rad(point &rotate);
+    void shift_model(std::shared_ptr<object> obj, point &move);
+    void scale_model(std::shared_ptr<object> obj, point &scale);
+    void rotate_model(std::shared_ptr<object> obj, point &rotate);
 };
 
 #endif // REFORM_MANAGER_HPP

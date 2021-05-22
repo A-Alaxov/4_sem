@@ -44,6 +44,10 @@ private slots:
 
   void on_rotate_cam_clicked();
 
+  void on_remove_fig_clicked();
+
+  void on_remove_cam_clicked();
+
 private:
   Ui::MainWindow *ui;
   QGraphicsScene *scene;

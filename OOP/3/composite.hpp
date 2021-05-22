@@ -11,14 +11,14 @@ public:
     ~composite() = default;
 
     bool add(std::shared_ptr<object> obj) override;
-    bool remove() override { return false; }
-    std::vector<std::shared_ptr<object>>::iterator begin() override { return std::vector<std::shared_ptr<object>>::iterator(); }
-    std::vector<std::shared_ptr<object>>::iterator end() override { return std::vector<std::shared_ptr<object>>::iterator(); }
+    bool remove(long index) override;
+    std::vector<std::shared_ptr<object>>::iterator begin() override { return objects.begin(); }
+    std::vector<std::shared_ptr<object>>::iterator end() override { return objects.end(); }
 
     void accept(std::shared_ptr<visitor> _visitor) override;
     bool is_composite() override { return true; };
     bool is_visible() override { return false; };
-    void reform(point &move, point &scale, point &rotate) override;
+    void reform(std::shared_ptr<Matrix<double>> reform_mtr) override;
 
     std::vector<std::shared_ptr<object>> &get_objects() { return objects; };
 

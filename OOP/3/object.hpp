@@ -14,14 +14,14 @@ public:
     ~object() = default;
 
     virtual bool add(std::shared_ptr<object> obj) { return false; }
-    virtual bool remove() { return false; }
+    virtual bool remove(long index) { return false; }
     virtual std::vector<std::shared_ptr<object>>::iterator begin() { return std::vector<std::shared_ptr<object>>::iterator(); }
     virtual std::vector<std::shared_ptr<object>>::iterator end() { return std::vector<std::shared_ptr<object>>::iterator(); }
 
     virtual void accept(std::shared_ptr<visitor> _visitor) = 0;
     virtual bool is_composite() = 0;
     virtual bool is_visible() = 0;
-    virtual void reform(point &move, point &scale, point &rotate) = 0;
+    virtual void reform(std::shared_ptr<Matrix<double>> reform_mtr) = 0;
 };
 
 class visible_object : public object

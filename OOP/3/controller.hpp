@@ -12,18 +12,13 @@ public:
     ~base_controller() = default;
 
     virtual void load_model(std::string name) = 0;
-    /*
-    virtual void add_model() = 0;
-    virtual void remove_model() = 0;
-    virtual void add_camera() = 0;
-    virtual void set_camera() = 0;
-    virtual void remove_camera() = 0;
-    */
+    virtual void remove_model(long index) = 0;
+    virtual void add_camera(point &cam_pos) = 0;
+    virtual void set_camera(long index) = 0;
+    virtual void remove_camera(long index) = 0;
     virtual void draw_scene(std::shared_ptr<base_drawer> _drawer) = 0;
     virtual void reform_model(long &model_index, point &move, point &scale, point &rotate) = 0;
-    /*
-    virtual void reform_camera() = 0;
-    */
+    virtual void reform_camera(long &camera_index, point &move, point &rotate) = 0;
 };
 
 class controller : public base_controller
@@ -33,18 +28,13 @@ public:
     ~controller() = default;
 
     void load_model(std::string name) override;
-    /*
-    void add_model() override;
-    void remove_model() override;
-    void add_camera() override;
-    void set_camera() override;
-    void remove_camera() override;
-    */
+    void remove_model(long index) override;
+    void add_camera(point &cam_pos) override;
+    void set_camera(long index) override;
+    void remove_camera(long index) override;
     void draw_scene(std::shared_ptr<base_drawer> _drawer) override;
     void reform_model(long &model_index, point &move, point &scale, point &rotate) override;
-    /*
-    void reform_camera() override;
-    */
+    void reform_camera(long &camera_index, point &move, point &rotate) override;
 
 private:
     scene_manager _scene_manager;

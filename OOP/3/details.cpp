@@ -20,12 +20,10 @@ std::vector<edge> details::get_edges()
     return edges;
 }
 
-void details::reform(point &move, point &scale, point &rotate)
+void details::reform(std::shared_ptr<Matrix<double>> reform_mtr)
 {
-    for (auto point : points)
+    for (auto &point : points)
     {
-        point.move(move);
-        point.scale(scale);
-        point.rotate(rotate);
+        point.reform(reform_mtr);
     }
 }

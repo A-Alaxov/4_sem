@@ -1,4 +1,6 @@
 #include "point.hpp"
+
+#include <vector>
 #include <math.h>
 
 point::point()
@@ -11,32 +13,29 @@ point::point(const double x, const double y, const double z)
 {
 }
 
-void point::move(point &move)
+void point::reform(const std::shared_ptr<Matrix<double>> mtr)
 {
-    x += move.x;
-    y += move.y;
-    z += move.z;
+    std::vector<double> result(4, 0);
+    std::vector<double> data = {x, y, z, 1.0};
+    for (size_t i = 0; i < 4; i++)
+    {
+        for (size_t j = 0; j < 4; j++)
+        {
+            result[i] += data[j] * (*mtr)[i][j];
+        }
+    }
+
+    set_x(result[0]);
+    set_y(result[1]);
+    set_z(result[2]);
 }
 
-void point::scale(point &scale)
+point point::deg_to_rad() const
 {
-    x *= scale.x;
-    y *= scale.y;
-    z *= scale.z;
-}
+    point radians(x, y, z);
+    radians.set_x(x * M_PI / 180);
+    radians.set_y(y * M_PI / 180);
+    radians.set_z(z * M_PI / 180);
 
-void point::rotate_in_flat(double &coord_1, double &coord_2, double &angle)
-{
-    double tmp_1 = coord_1;
-    double tmp_2 = coord_2;
-
-    coord_1 = tmp_1 * cos(angle) - tmp_2 * sin(angle);
-    coord_2 = tmp_1 * sin(angle) + tmp_2 * cos(angle);
-}
-
-void point::rotate(point &rotate)
-{
-    rotate_in_flat(x, y, rotate.x);
-    rotate_in_flat(y, z, rotate.y);
-    rotate_in_flat(z, x, rotate.z);
+    return radians;
 }

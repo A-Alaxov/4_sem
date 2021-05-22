@@ -47,4 +47,26 @@ public:
     }
 };
 
+class range_error : public base_error
+{
+public:
+    range_error(const std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "Range error";
+    }
+};
+
+class memory_error : public base_error
+{
+public:
+    memory_error(const std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "Memory error";
+    }
+};
+
 #endif // ERRORS_HPP

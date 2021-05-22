@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     builder.cpp \
+    camera.cpp \
     commands.cpp \
     composite.cpp \
     controller.cpp \
@@ -31,10 +32,12 @@ SOURCES += \
     scene.cpp \
     scene_manager.cpp \
     source_loader.cpp \
+    transform_matrix.cpp \
     visitor.cpp
 
 HEADERS += \
     builder.hpp \
+    camera.hpp \
     commands.hpp \
     composite.hpp \
     controller.hpp \
@@ -47,6 +50,8 @@ HEADERS += \
     errors.hpp \
     facade.hpp \
     mainwindow.hpp \
+    matrix.hpp \
+    matrix_base.hpp \
     model.hpp \
     model_loader.hpp \
     object.hpp \
@@ -55,6 +60,7 @@ HEADERS += \
     scene.hpp \
     scene_manager.hpp \
     source_loader.hpp \
+    transform_matrix.hpp \
     visitor.hpp
 
 FORMS += \

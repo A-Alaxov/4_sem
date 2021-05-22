@@ -1,17 +1,28 @@
 #include "reform_manager.hpp"
+#include "transform_matrix.hpp"
 #include <math.h>
 
-void reform_manager::reform_model(std::shared_ptr<object> obj, point &move, point &scale, point &rotate)
+void reform_manager::shift_model(std::shared_ptr<object> obj, point &move)
 {
-    obj->reform(move, scale, rotate);
+    std::shared_ptr<Matrix<double>> reform_mtr(std::make_shared<MoveMatrix>(move));
+    obj->reform(reform_mtr);
 }
 
-point reform_manager::deg_to_rad(point &rotate)
+void reform_manager::scale_model(std::shared_ptr<object> obj, point &scale)
 {
-    point radians(rotate);
-    radians.set_x(rotate.get_x() * M_PI / 180);
-    radians.set_x(rotate.get_y() * M_PI / 180);
-    radians.set_x(rotate.get_z() * M_PI / 180);
+    std::shared_ptr<Matrix<double>> reform_mtr(std::make_shared<ScaleMatrix>(scale));
+    obj->reform(reform_mtr);
+}
 
-    return radians;
+void reform_manager::rotate_model(std::shared_ptr<object> obj, point &rotate)
+{
+    point angles = rotate.deg_to_rad();
+    std::shared_ptr<Matrix<double>> reform_mtr(std::make_shared<RotateOxMatrix>(angles.get_x()));
+    obj->reform(reform_mtr);
+
+    reform_mtr = std::make_shared<RotateOyMatrix>(angles.get_y());
+    obj->reform(reform_mtr);
+
+    reform_mtr = std::make_shared<RotateOzMatrix>(angles.get_z());
+    obj->reform(reform_mtr);
 }

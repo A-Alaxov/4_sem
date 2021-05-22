@@ -12,12 +12,12 @@ public:
     std::shared_ptr<scene> get_scene();
     void set_scene(std::shared_ptr<scene> _scene);
 
-    //std::shared_ptr<camera> get_camera();
-    //void set_camera(std::shared_ptr<camera> _camera);
+    std::shared_ptr<camera> get_camera();
+    void set_camera(long cam_index);
 
 private:
     std::shared_ptr<scene> _scene;
-    //std::shared_ptr<camera> _camera;
+    std::shared_ptr<camera> _camera;
 };
 
 #endif // SCENE_MANAGER_HPP

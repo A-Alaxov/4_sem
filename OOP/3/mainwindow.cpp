@@ -47,20 +47,45 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_shift_fig_clicked()
 {
+    long index = ui->model_select->currentIndex();
+    point shift(ui->x_shift_fig->text().toDouble(), ui->y_shift_fig->text().toDouble(), ui->z_shift_fig->text().toDouble());
+    point scale(1, 1, 1);
+    point rotate(0, 0, 0);
+    std::shared_ptr<base_command> command(new reform_model(index, shift, scale, rotate));
+    _facade->execute_command(command);
+
+    update_scene();
 }
 
 void MainWindow::on_rotate_fig_clicked()
 {
+    long index = ui->model_select->currentIndex();
+    point shift(0, 0, 0);
+    point scale(1, 1, 1);
+    point rotate(ui->xy_angle_fig->text().toDouble(), ui->yz_angle_fig->text().toDouble(), ui->zx_angle_fig->text().toDouble());
+    std::shared_ptr<base_command> command(new reform_model(index, shift, scale, rotate));
+    _facade->execute_command(command);
+
+    update_scene();
 }
 
 void MainWindow::on_scale_fig_clicked()
 {
+    long index = ui->model_select->currentIndex();
+    point shift(0, 0, 0);
+    point scale(ui->x_scale_fig->text().toDouble(), ui->y_scale_fig->text().toDouble(), ui->z_scale_fig->text().toDouble());
+    point rotate(0, 0, 0);
+    std::shared_ptr<base_command> command(new reform_model(index, shift, scale, rotate));
+    _facade->execute_command(command);
+
+    update_scene();
 }
 
 void MainWindow::on_import_fig_clicked()
 {
     std::shared_ptr<base_command> command(new load_model(ui->file_name->text().toStdString()));
     _facade->execute_command(command);
+    ui->model_select->addItem(QString::number(ui->model_select->count()));
 
     update_scene();
 }
@@ -78,14 +103,33 @@ void MainWindow::print_message(char *str)
 
 void MainWindow::on_add_cam_clicked()
 {
+    std::shared_ptr<base_command> command(new add_camera());
+    _facade->execute_command(command);
+    ui->camera_select->addItem(QString::number(ui->camera_select->count()));
+
+    update_scene();
 }
 
 void MainWindow::on_shift_cam_clicked()
 {
+    long index = ui->camera_select->currentIndex();
+    point shift(ui->x_shift_cam->text().toDouble(), ui->y_shift_cam->text().toDouble(), ui->z_shift_cam->text().toDouble());
+    point rotate(0, 0, 0);
+    std::shared_ptr<base_command> command(new reform_camera(index, shift, rotate));
+    _facade->execute_command(command);
+
+    update_scene();
 }
 
 void MainWindow::on_rotate_cam_clicked()
 {
+    long index = ui->camera_select->currentIndex();
+    point shift(0, 0, 0);
+    point rotate(ui->xy_angle_cam->text().toDouble(), ui->yz_angle_cam->text().toDouble(), ui->zx_angle_cam->text().toDouble());
+    std::shared_ptr<base_command> command(new reform_camera(index, shift, rotate));
+    _facade->execute_command(command);
+
+    update_scene();
 }
 
 void MainWindow::setup_scene()
@@ -107,3 +151,23 @@ void MainWindow::update_scene()
 }
 
 void MainWindow::on_MainWindow_destroyed() {}
+
+void MainWindow::on_remove_fig_clicked()
+{
+    long index = ui->model_select->currentIndex();
+    std::shared_ptr<base_command> command(new remove_model(index));
+    _facade->execute_command(command);
+    ui->model_select->removeItem(index);
+
+    update_scene();
+}
+
+void MainWindow::on_remove_cam_clicked()
+{
+    long index = ui->camera_select->currentIndex();
+    std::shared_ptr<base_command> command(new remove_camera(index));
+    _facade->execute_command(command);
+    ui->camera_select->removeItem(index);
+
+    update_scene();
+}
