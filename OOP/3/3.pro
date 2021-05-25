@@ -4,69 +4,98 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
 
+INCLUDEPATH += gui
+INCLUDEPATH += objects
+INCLUDEPATH += managers
+INCLUDEPATH += loading
+INCLUDEPATH += matrix
+INCLUDEPATH += solution
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    builder.cpp \
-    camera.cpp \
     commands.cpp \
-    composite.cpp \
-    controller.cpp \
-    creator.cpp \
-    details.cpp \
-    draw_manager.cpp \
-    drawer.cpp \
-    drawer_factory.cpp \
-    edge.cpp \
     errors.cpp \
     facade.cpp \
+    gui/drawer.cpp \
+    gui/drawer_factory.cpp \
+    gui/mainwindow.cpp \
+    gui/visitor.cpp \
+    loading/base_loader.cpp \
+    loading/builder.cpp \
+    loading/secretary.cpp \
+    loading/source_loader.cpp \
     main.cpp \
-    mainwindow.cpp \
-    model.cpp \
-    model_loader.cpp \
-    object.cpp \
-    point.cpp \
-    reform_manager.cpp \
-    scene.cpp \
-    scene_manager.cpp \
-    source_loader.cpp \
-    transform_matrix.cpp \
-    visitor.cpp
+    managers/draw_manager.cpp \
+    managers/load_manager.cpp \
+    managers/reform_manager.cpp \
+    managers/scene_manager.cpp \
+    managers/solution_manager.cpp \
+    matrix/transform_matrix.cpp \
+    objects/camera.cpp \
+    objects/composite.cpp \
+    objects/details.cpp \
+    objects/edge.cpp \
+    objects/model.cpp \
+    objects/object.cpp \
+    objects/point.cpp \
+    objects/scene.cpp \
+    solution/camera_load_solution.cpp \
+    solution/model_load_solution.cpp \
+    solution/registration.cpp \
+    solution/scene_load_solution.cpp \
+    solution/solution.cpp
 
 HEADERS += \
-    builder.hpp \
-    camera.hpp \
     commands.hpp \
-    composite.hpp \
-    controller.hpp \
-    creator.hpp \
-    details.hpp \
-    draw_manager.hpp \
-    drawer.hpp \
-    drawer_factory.hpp \
-    edge.hpp \
     errors.hpp \
     facade.hpp \
-    mainwindow.hpp \
-    matrix.hpp \
-    matrix_base.hpp \
-    model.hpp \
-    model_loader.hpp \
-    object.hpp \
-    point.hpp \
-    reform_manager.hpp \
-    scene.hpp \
-    scene_manager.hpp \
-    source_loader.hpp \
-    transform_matrix.hpp \
-    visitor.hpp
-
-FORMS += \
-    mainwindow.ui
+    gui/drawer.hpp \
+    gui/drawer_factory.hpp \
+    gui/mainwindow.hpp \
+    gui/visitor.hpp \
+    loading/base_loader.hpp \
+    loading/builder.hpp \
+    loading/secretary.hpp \
+    loading/source_loader.hpp \
+    managers/base_manager.hpp \
+    managers/draw_manager.hpp \
+    managers/load_manager.hpp \
+    managers/reform_manager.hpp \
+    managers/scene_manager.hpp \
+    managers/solution_manager.hpp \
+    matrix/matrix.hpp \
+    matrix/matrix_base.hpp \
+    matrix/transform_matrix.hpp \
+    objects/camera.hpp \
+    objects/composite.hpp \
+    objects/details.hpp \
+    objects/edge.hpp \
+    objects/model.hpp \
+    objects/object.hpp \
+    objects/point.hpp \
+    objects/scene.hpp \
+    solution/camera_load_solution.hpp \
+    solution/loaders.hpp \
+    solution/model_load_solution.hpp \
+    solution/registration.hpp \
+    solution/scene_load_solution.hpp \
+    solution/solution.hpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    mainwindow.ui
+
+DISTFILES += \
+    3.pro.user \
+    cam1.txt \
+    cube.txt \
+    lab_3.mdj \
+    pyra.txt \
+    Схема.PNG

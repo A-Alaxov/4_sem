@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>934</width>
+    <width>910</width>
     <height>678</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>911</width>
+      <width>891</width>
       <height>500</height>
      </rect>
     </property>
@@ -195,7 +195,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Add camera</string>
+     <string>Load camera</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="xy_angle_cam">
@@ -336,13 +336,23 @@
      <string>Remove figure</string>
     </property>
    </widget>
+   <widget class="QLineEdit" name="file_name_camera">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>520</y>
+      <width>171</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>934</width>
+     <width>910</width>
      <height>21</height>
     </rect>
    </property>

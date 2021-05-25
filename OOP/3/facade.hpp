@@ -6,13 +6,7 @@
 class facade
 {
 public:
-    facade();
-    ~facade();
-
     void execute_command(std::shared_ptr<base_command> command);
-
-private:
-    std::shared_ptr<base_controller> _controller;
 };
 
 #endif // FACADE_HPP

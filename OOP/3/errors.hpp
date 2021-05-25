@@ -69,4 +69,37 @@ public:
     }
 };
 
+class no_secretary_error : public base_error
+{
+public:
+    explicit no_secretary_error(std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "There is no secretary set";
+    }
+};
+
+class no_camera_error : public base_error
+{
+public:
+    explicit no_camera_error(std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "There is no camera set";
+    }
+};
+
+class config_error : public base_error
+{
+public:
+    explicit config_error(std::string &er_msg) : base_error(er_msg) {}
+
+    const char *what() const noexcept override
+    {
+        return "Error in registration process";
+    }
+};
+
 #endif // ERRORS_HPP
