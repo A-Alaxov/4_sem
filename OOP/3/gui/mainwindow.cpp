@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "drawer_factory.hpp"
+#include "drawer_solution.hpp"
 
 QGraphicsScene *scene;
 
@@ -83,21 +83,28 @@ void MainWindow::on_scale_fig_clicked()
 void MainWindow::on_import_fig_clicked()
 {
     std::shared_ptr<base_command> command(new load_model(ui->file_name->text().toStdString()));
-    _facade->execute_command(command);
-    ui->model_select->addItem(QString::number(ui->model_select->count()));
-    ui->model_select->setCurrentIndex(ui->model_select->count() - 1);
+    try
+    {
+        _facade->execute_command(command);
+        ui->model_select->addItem(QString::number(ui->model_select->count()));
+        ui->model_select->setCurrentIndex(ui->model_select->count() - 1);
 
-    update_scene();
+        update_scene();
+    }
+    catch (base_error &er)
+    {
+        print_message(er.get_info());
+    }
 }
 
 void MainWindow::draw()
 {
 }
 
-void MainWindow::print_message(char *str)
+void MainWindow::print_message(std::string str)
 {
     QMessageBox msg;
-    msg.setText(QString(str));
+    msg.setText(QString().fromUtf8(str.c_str()));
     msg.exec();
 }
 
@@ -135,13 +142,20 @@ void MainWindow::on_rotate_cam_clicked()
 
 void MainWindow::setup_scene()
 {
+/*
     scene = std::shared_ptr<QGraphicsScene>(new QGraphicsScene(this));
     ui->graphicsView->setScene(scene.get());
+*/
+
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+
     ui->graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     scene->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
-    std::shared_ptr<abstract_factory> factory(new qt_factory(scene));
-    drawer = factory->create_ui();
+    std::shared_ptr<abstract_factory> factory = drawer_solution().get_factory();
+    drawer = std::shared_ptr<base_drawer>(factory->create_ui());
+    drawer->set_canvas(std::make_shared<qt_canvas>(scene));
 }
 
 void MainWindow::update_scene()

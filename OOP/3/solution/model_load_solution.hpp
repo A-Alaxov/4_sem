@@ -3,7 +3,7 @@
 
 #define MODEL_CFG_PATH "./data/model_load.cfg"
 
-#include "config_manager.hpp"
+#include "solution_manager.hpp"
 
 class model_load_solution
 {

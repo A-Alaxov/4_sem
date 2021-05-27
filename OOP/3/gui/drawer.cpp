@@ -1,16 +1,16 @@
 #include "drawer.hpp"
 
-qt_drawer::qt_drawer(const qt_drawer &drawer)
+void qt_drawer::draw_line(const point &p1, const point &p2)
 {
-    scene = drawer.scene;
+    canvas->draw_line(p1, p2);
 }
 
-void qt_drawer::draw_line(const point &point1, const point &point2)
+void qt_drawer::set_canvas(std::shared_ptr<base_canvas> canvas)
 {
-    scene->addLine(point1.get_x(), point1.get_y(), point2.get_x(), point2.get_y());
+    this->canvas = canvas;
 }
 
 void qt_drawer::clear_scene()
 {
-    scene->clear();
+    canvas->clear();
 }

@@ -10,7 +10,7 @@ void load_model::execute()
 {
     if (!scene_manager_creator().get_manager()->is_camera_exist())
     {
-        std::string message = "Error in loading command";
+        std::string message = "There is no camera";
         throw no_camera_error(message);
     }
 

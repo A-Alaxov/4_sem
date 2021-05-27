@@ -25,3 +25,8 @@ std::shared_ptr<loader_creator> solution_manager::get_creator(size_t index)
 {
     return _solution.get_creator(index);
 }
+
+std::shared_ptr<abstract_factory> solution_manager::get_factory(size_t index)
+{
+    return _solution.get_factory(index);
+}

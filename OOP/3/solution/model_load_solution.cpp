@@ -19,5 +19,5 @@ std::shared_ptr<loader_creator> model_load_solution::get_creator()
         throw file_error(message);
     }
 
-    return config_manager_creator().get_manager()->get_creator(id);
+    return solution_manager_creator().get_manager()->get_creator(id);
 }

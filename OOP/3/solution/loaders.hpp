@@ -1,7 +1,7 @@
 #ifndef LOADERS_H
 #define LOADERS_H
 
-#include "source_loader.hpp"
+#include "model_file_loader.hpp"
 
 class loader_creator
 {

@@ -3,7 +3,6 @@
 
 #include <memory>
 #include "drawer.hpp"
-#
 
 class abstract_factory
 {
@@ -14,11 +13,7 @@ public:
 class qt_factory : public abstract_factory
 {
 public:
-    explicit qt_factory(const std::shared_ptr<QGraphicsScene> &_scene) : _scene(_scene) {}
     std::shared_ptr<base_drawer> create_ui() const override;
-
-private:
-    std::shared_ptr<QGraphicsScene> _scene;
 };
 
 #endif // ABSTRACT_FACTORY_HPP

@@ -4,6 +4,7 @@
 #include <map>
 
 #include "loaders.hpp"
+#include "drawer_factory.hpp"
 #include "solution.hpp"
 
 class base_registration_maker
@@ -18,8 +19,8 @@ class registration_maker : public base_registration_maker
 {
 public:
     registration_maker() = default;
-    virtual ~registration_maker() = default;
-    virtual void make_registration(solution &_solution) override;
+    ~registration_maker() = default;
+    void make_registration(solution &_solution) override;
 };
 
 #endif // REGISTRATION_H

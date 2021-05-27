@@ -1,15 +1,32 @@
 #include "errors.hpp"
 #include "solution.hpp"
 
-bool solution::registration(size_t index, const std::shared_ptr<loader_creator> &lc)
+bool solution::registration_creator(size_t index, const std::shared_ptr<loader_creator> &lc)
 {
-    return callback.insert(callback_map::value_type(index, lc)).second;
+    return creator_map.insert(callback_creator::value_type(index, lc)).second;
+}
+
+bool solution::registration_factory(size_t index, const std::shared_ptr<abstract_factory> &lc)
+{
+    return factory_map.insert(callback_factory::value_type(index, lc)).second;
 }
 
 std::shared_ptr<loader_creator> solution::get_creator(size_t index)
 {
-    callback_map::const_iterator it = callback.find(index);
-    if (it == callback.end())
+    callback_creator::const_iterator it = creator_map.find(index);
+    if (it == creator_map.end())
+    {
+        std::string message = "";
+        throw config_error(message);
+    }
+
+    return it->second;
+}
+
+std::shared_ptr<abstract_factory> solution::get_factory(size_t index)
+{
+    callback_factory::const_iterator it = factory_map.find(index);
+    if (it == factory_map.end())
     {
         std::string message = "";
         throw config_error(message);

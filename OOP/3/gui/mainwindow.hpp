@@ -52,12 +52,13 @@ private slots:
 
 private:
   Ui::MainWindow *ui;
-  std::shared_ptr<QGraphicsScene> scene;
+  //std::shared_ptr<QGraphicsScene> scene;
+  QGraphicsScene *scene;
 
   std::unique_ptr<facade> _facade;
   std::shared_ptr<base_drawer> drawer;
 
   void draw();
-  void print_message(char str[]);
+  void print_message(std::string str);
 };
 #endif // MAINWINDOW_HPP

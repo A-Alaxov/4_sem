@@ -11,6 +11,7 @@ public:
     solution_manager();
 
     std::shared_ptr<loader_creator> get_creator(size_t index);
+    std::shared_ptr<abstract_factory> get_factory(size_t index);
 
 private:
     solution _solution;

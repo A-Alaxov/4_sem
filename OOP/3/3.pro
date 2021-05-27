@@ -17,16 +17,16 @@ INCLUDEPATH += solution
 
 SOURCES += \
     commands.cpp \
-    errors.cpp \
     facade.cpp \
+    gui/canvas.cpp \
     gui/drawer.cpp \
     gui/drawer_factory.cpp \
     gui/mainwindow.cpp \
-    gui/visitor.cpp \
-    loading/base_loader.cpp \
     loading/builder.cpp \
+    loading/camera_file_loader.cpp \
+    loading/model_file_loader.cpp \
+    loading/scene_file_loader.cpp \
     loading/secretary.cpp \
-    loading/source_loader.cpp \
     main.cpp \
     managers/draw_manager.cpp \
     managers/load_manager.cpp \
@@ -39,10 +39,10 @@ SOURCES += \
     objects/details.cpp \
     objects/edge.cpp \
     objects/model.cpp \
-    objects/object.cpp \
     objects/point.cpp \
     objects/scene.cpp \
     solution/camera_load_solution.cpp \
+    solution/drawer_solution.cpp \
     solution/model_load_solution.cpp \
     solution/registration.cpp \
     solution/scene_load_solution.cpp \
@@ -52,14 +52,17 @@ HEADERS += \
     commands.hpp \
     errors.hpp \
     facade.hpp \
+    gui/canvas.hpp \
     gui/drawer.hpp \
     gui/drawer_factory.hpp \
     gui/mainwindow.hpp \
     gui/visitor.hpp \
     loading/base_loader.hpp \
     loading/builder.hpp \
+    loading/camera_file_loader.hpp \
+    loading/model_file_loader.hpp \
+    loading/scene_file_loader.hpp \
     loading/secretary.hpp \
-    loading/source_loader.hpp \
     managers/base_manager.hpp \
     managers/draw_manager.hpp \
     managers/load_manager.hpp \
@@ -78,6 +81,7 @@ HEADERS += \
     objects/point.hpp \
     objects/scene.hpp \
     solution/camera_load_solution.hpp \
+    solution/drawer_solution.hpp \
     solution/loaders.hpp \
     solution/model_load_solution.hpp \
     solution/registration.hpp \
