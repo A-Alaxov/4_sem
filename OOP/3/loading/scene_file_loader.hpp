@@ -11,7 +11,7 @@ public:
     ~scene_file_loader();
     explicit scene_file_loader(std::shared_ptr<std::ifstream> &file);
     void open(std::string &name) override;
-    std::shared_ptr<object> load() override;
+    std::shared_ptr<scene> load() override;
     void close() override;
     bool is_open() override;
 

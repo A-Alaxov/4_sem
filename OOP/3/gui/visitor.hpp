@@ -1,21 +1,27 @@
 #ifndef VISITOR_HPP
 #define VISITOR_HPP
 
+#include "drawer.hpp"
+
 class model;
 class camera;
 class composite;
-class scene;
 
 class visitor
 {
 public:
     visitor() = default;
-    virtual ~visitor() =default;
+    visitor(const std::shared_ptr<camera> &_camera, const std::shared_ptr<base_drawer> _drawer);
+    ~visitor() =default;
 
-    virtual void visit_model(model &_model) = 0;
-    virtual void visit_camera(camera &_camera) = 0;
-    virtual void visit_composite(composite &_composite) = 0;
-    virtual void visit_scene(scene &_scene) = 0;
+    void visit_model(model &_model);
+    void visit_camera(camera &_camera) {};
+    void visit_composite(composite &_composite) {};
+
+private:
+    point get_projection(point &_point);
+    std::shared_ptr<camera> _camera;
+    std::shared_ptr<base_drawer> _drawer;
 };
 
 #endif // VISITOR_HPP

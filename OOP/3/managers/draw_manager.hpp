@@ -3,27 +3,23 @@
 
 #include <memory>
 #include "visitor.hpp"
-#include "drawer.hpp"
 #include "scene.hpp"
 #include "base_manager.hpp"
 
-class draw_manager : public visitor, public base_manager
+class draw_manager : public base_manager
 {
 public:
     draw_manager() = default;
     ~draw_manager() = default;
 
-    void set_drawer(std::shared_ptr<base_drawer> drawer);
+    void set_drawer(std::shared_ptr<base_drawer> _drawer);
     void set_camera(std::shared_ptr<camera> _camera);
 
-    void visit_model(model &_model) override;
-    void visit_camera(camera &_camera) override {};
-    void visit_composite(composite &_composite) override {};
-    void visit_scene(scene &_scene) override {};
+    void draw(std::shared_ptr<scene> _scene);
 
 private:
-    point get_projection(point &_point);
-    std::shared_ptr<base_drawer> drawer;
+    std::shared_ptr<visitor> _visitor;
+    std::shared_ptr<base_drawer> _drawer;
     std::shared_ptr<camera> _camera;
 };
 

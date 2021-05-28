@@ -180,10 +180,17 @@ void MainWindow::on_remove_cam_clicked()
 {
     long index = ui->camera_select->currentIndex();
     std::shared_ptr<base_command> command(new remove_camera(index));
-    _facade->execute_command(command);
-    ui->camera_select->removeItem(index);
+    try
+    {
+        _facade->execute_command(command);
+        ui->camera_select->removeItem(index);
 
-    update_scene();
+        update_scene();
+    }
+    catch (base_error &er)
+    {
+        print_message(er.get_info());
+    }
 }
 
 void MainWindow::on_camera_select_currentIndexChanged(int index)

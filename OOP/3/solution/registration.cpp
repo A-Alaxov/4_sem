@@ -23,8 +23,8 @@ void registration_maker::make_registration(solution &_solution)
         throw config_error(message);
     }
 
-    is_registered = _solution.registration_creator(2,
-                          std::shared_ptr<loader_creator>(new con_loader_creator<scene_file_loader>()));
+    is_registered = _solution.registration_scene_creator(2,
+                          std::shared_ptr<scene_loader_creator>(new con_scene_loader_creator<scene_file_loader>()));
     if (!is_registered)
     {
         std::string message = "";

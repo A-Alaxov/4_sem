@@ -10,7 +10,7 @@ class scene_load_solution
 public:
     scene_load_solution() = default;
 
-    std::shared_ptr<loader_creator> get_creator();
+    std::shared_ptr<scene_loader_creator> get_creator();
 };
 
 #endif // SCENE_LOAD_SOLUTION_H

@@ -36,13 +36,16 @@ public:
     std::shared_ptr<object> load(std::string name) override;
 };
 
-class scene_secretary : public load_general_secretary
+class scene_secretary
 {
 public:
     scene_secretary();
     ~scene_secretary() = default;
 
-    std::shared_ptr<object> load(std::string name) override;
+    std::shared_ptr<scene> load(std::string name);
+
+protected:
+    std::shared_ptr<base_scene_loader> src_loader;
 };
 
 #endif // LOADER_HPP

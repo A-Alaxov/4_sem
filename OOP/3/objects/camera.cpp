@@ -6,6 +6,11 @@ camera::camera()
     angles = point(0, 0, 0);
 }
 
+camera::camera(const point &pos, const point &angs)
+    :position(pos), angles(angs)
+{
+}
+
 const point &camera::get_position() const
 {
     return position;

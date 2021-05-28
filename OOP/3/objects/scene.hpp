@@ -5,7 +5,7 @@
 #include "model.hpp"
 #include "camera.hpp"
 
-class scene : public object
+class scene
 {
 public:
     scene();
@@ -19,11 +19,6 @@ public:
 
     std::shared_ptr<composite> get_models() { return models; }
     std::shared_ptr<composite> get_cameras() { return cameras; }
-
-    virtual void accept(std::shared_ptr<visitor> _visitor) override { _visitor->visit_scene(*this); }
-    virtual bool is_composite() override { return true; }
-    virtual bool is_visible() override { return true; }
-    virtual void reform(std::shared_ptr<Matrix<double>> reform_mtr) override;
 
 private:
     std::shared_ptr<composite> models;

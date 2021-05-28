@@ -31,7 +31,7 @@ void load_camera::execute()
 void load_scene::execute()
 {
     std::shared_ptr<load_manager> _load_manager = load_manager_creator().get_manager();
-    _load_manager->set_secretary(std::shared_ptr<load_general_secretary>(new scene_secretary));
+    _load_manager->set_scene_secretary(std::shared_ptr<scene_secretary>());
     std::shared_ptr<object> _scene = _load_manager->load(name);
     scene_manager_creator().get_manager()->get_scene()->add_camera(_scene);
 }
@@ -40,7 +40,7 @@ void draw_scene::execute()
 {
     if (!scene_manager_creator().get_manager()->is_camera_exist())
     {
-        std::string message = "Error in loading command";
+        std::string message = "There is no camera";
         throw no_camera_error(message);
     }
 
@@ -49,7 +49,7 @@ void draw_scene::execute()
 
     drawer->clear_scene();
 
-    scene_manager_creator().get_manager()->get_scene()->get_models()->accept(draw_manager_creator().get_manager());
+    draw_manager_creator().get_manager()->draw(scene_manager_creator().get_manager()->get_scene());
 }
 
 void reform_model::execute()

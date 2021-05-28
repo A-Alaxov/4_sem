@@ -3,11 +3,11 @@
 
 #include "object.hpp"
 #include "details.hpp"
-#include "draw_manager.hpp"
+#include "visitor.hpp"
 
 class model : public visible_object
 {
-    friend class draw_manager;
+    friend class visitor;
 public:
     model();
     explicit model(const std::shared_ptr<details> &_details);

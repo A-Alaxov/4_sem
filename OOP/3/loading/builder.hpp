@@ -1,7 +1,7 @@
 #ifndef BASE_BUILDER_HPP
 #define BASE_BUILDER_HPP
 
-#include "model.hpp"
+#include "scene.hpp"
 
 class model_builder
 {
@@ -31,7 +31,7 @@ public:
     void build_model(const std::shared_ptr<object> &_model);
     void build_camera(const std::shared_ptr<object> &_camera);
 
-    std::shared_ptr<object> get();
+    std::shared_ptr<scene> get();
 
 private:
     std::shared_ptr<scene> _scene;
@@ -51,7 +51,8 @@ public:
     std::shared_ptr<object> get();
 
 private:
-    std::shared_ptr<camera> _camera;
+    point position;
+    point angles;
 };
 
 #endif // BASE_BUILDER_HPP

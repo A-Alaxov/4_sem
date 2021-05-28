@@ -49,9 +49,9 @@ bool scene_builder::is_build()
     return _scene != nullptr;
 }
 
-std::shared_ptr<object> scene_builder::get()
+std::shared_ptr<scene> scene_builder::get()
 {
-    return std::dynamic_pointer_cast<object>(_scene);
+    return std::shared_ptr<scene>(_scene);
 }
 
 void scene_builder::build_model(const std::shared_ptr<object> &_model)
@@ -66,25 +66,35 @@ void scene_builder::build_camera(const std::shared_ptr<object> &_camera)
 
 void camera_builder::build()
 {
-    _camera = std::shared_ptr<camera>(new camera);
+    position.set_x(0);
+    position.set_y(0);
+    position.set_z(0);
+    angles.set_x(0);
+    angles.set_y(0);
+    angles.set_z(0);
 }
 
 bool camera_builder::is_build()
 {
-    return _camera != nullptr;
+    return true;
 }
 
 std::shared_ptr<object> camera_builder::get()
 {
-    return std::dynamic_pointer_cast<object>(_camera);
+    //return std::dynamic_pointer_cast<object>(_camera);
+    return std::shared_ptr<camera>(new camera(position, angles));
 }
 
 void camera_builder::build_pos(double x, double y, double z)
 {
-    _camera->set_position(point(x, y, z));
+    position.set_x(x);
+    position.set_y(y);
+    position.set_z(z);
 }
 
 void camera_builder::build_angles(double ox, double oy, double oz)
 {
-    _camera->set_angles(point(ox, oy, oz));
+    angles.set_x(ox);
+    angles.set_y(oy);
+    angles.set_z(oz);
 }

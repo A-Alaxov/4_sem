@@ -25,7 +25,7 @@ void scene_file_loader::open(std::string &name)
     }
 }
 
-std::shared_ptr<object> scene_file_loader::load()
+std::shared_ptr<scene> scene_file_loader::load()
 {
     builder->build();
 
@@ -38,7 +38,7 @@ std::shared_ptr<object> scene_file_loader::load()
     load_models();
     load_cameras();
 
-    return std::dynamic_pointer_cast<object>(builder->get());
+    return std::shared_ptr<scene>(builder->get());
 }
 
 void scene_file_loader::close()

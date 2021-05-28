@@ -12,9 +12,25 @@ std::shared_ptr<object> load_manager::load(const std::string &name)
     return secretary->load(name);
 }
 
+std::shared_ptr<scene> load_manager::load_scene(const std::string &name)
+{
+    if (scn_secr == nullptr)
+    {
+        std::string message = "Error in loading";
+        throw no_secretary_error(message);
+    }
+
+    return scn_secr->load(name);
+}
+
 void load_manager::set_secretary(const std::shared_ptr<load_general_secretary> &secretary)
 {
     this->secretary = secretary;
+}
+
+void load_manager::set_scene_secretary(const std::shared_ptr<scene_secretary> &secretary)
+{
+    scn_secr = secretary;
 }
 
 std::shared_ptr<load_manager> load_manager_creator::get_manager()

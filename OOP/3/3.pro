@@ -22,6 +22,7 @@ SOURCES += \
     gui/drawer.cpp \
     gui/drawer_factory.cpp \
     gui/mainwindow.cpp \
+    gui/visitor.cpp \
     loading/builder.cpp \
     loading/camera_file_loader.cpp \
     loading/model_file_loader.cpp \

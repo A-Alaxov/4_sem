@@ -5,6 +5,7 @@
 #include <memory>
 
 class object;
+class scene;
 
 class source_loader
 {
@@ -42,7 +43,7 @@ public:
     virtual std::shared_ptr<object> load() = 0;
 };
 
-class base_scene_loader : public source_loader
+class base_scene_loader
 {
 public:
     base_scene_loader() = default;
@@ -51,7 +52,7 @@ public:
     virtual void open(std::string &name) = 0;
     virtual void close() = 0;
     virtual bool is_open() = 0;
-    virtual std::shared_ptr<object> load() = 0;
+    virtual std::shared_ptr<scene> load() = 0;
 };
 
 #endif // BASE_LOADER_HPP
