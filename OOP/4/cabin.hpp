@@ -38,7 +38,6 @@ public slots:
 
 private:
     long cur_floor = 1;
-    long cur_target = -1;
     direction cur_direction = STAY;
     doors _doors;
     cabin_state _state = STAY_CLOSED;

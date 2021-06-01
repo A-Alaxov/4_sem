@@ -53,7 +53,6 @@ void cabin::cabin_get_target(long floor, const direction &dir)
         return;
 
     _state = START_MOVING;
-    cur_target = floor;
     cur_direction = dir;
 
     emit cabin_called();
