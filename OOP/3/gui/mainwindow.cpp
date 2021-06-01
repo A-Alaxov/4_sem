@@ -153,9 +153,16 @@ void MainWindow::setup_scene()
     ui->graphicsView->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     scene->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
 
-    std::shared_ptr<abstract_factory> factory = drawer_solution().get_factory();
-    drawer = std::shared_ptr<base_drawer>(factory->create_ui());
-    drawer->set_canvas(std::make_shared<qt_canvas>(scene));
+    try
+    {
+        std::shared_ptr<abstract_factory> factory = drawer_solution().get_factory();
+        drawer = std::shared_ptr<base_drawer>(factory->create_ui());
+        drawer->set_canvas(std::make_shared<qt_canvas>(scene));
+    }
+    catch (base_error &er)
+    {
+        print_message(er.get_info());
+    }
 }
 
 void MainWindow::update_scene()

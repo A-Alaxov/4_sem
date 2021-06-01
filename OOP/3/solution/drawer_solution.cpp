@@ -6,14 +6,14 @@ std::shared_ptr<abstract_factory> drawer_solution::get_factory()
 
     if (!file)
     {
-        std::string message = "Error in getting scene from config file";
+        std::string message = "Error in getting drawer from config file";
         throw file_error(message);
     }
 
     size_t id;
     if (!(file >> id))
     {
-        std::string message = "Error in getting scene from config file";
+        std::string message = "Error in getting drawer from config file";
         throw file_error(message);
     }
 
