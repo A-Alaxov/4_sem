@@ -1,0 +1,51 @@
+#ifndef CUTTER_HPP
+#define CUTTER_HPP
+
+#include <QPainter>
+#include <vector>
+
+#include "figures.hpp"
+
+class cutter
+{
+    enum cutter_state
+    {
+        START_FIG,
+        PROC_FIG,
+        FIRST_LINE_POINT,
+        SECOND_LINE_POINT,
+    };
+
+public:
+    cutter(const QColor &cut_col, const QColor vis_col, const QColor seg_col);
+    long get_state() { return state; }
+    void clear();
+    void draw(QPainter &painter);
+    bool cut();
+    void add_point(long x, long y, bool is_hor, bool is_vert, bool is_paral);
+    void render_point(long x, long y, bool is_hor, bool is_vert, bool is_paral);
+    void set_cut_col(const QColor &color);
+    void set_vis_col(const QColor &color);
+    void set_seg_col(const QColor &color);
+    void end_cutter();
+
+private:
+    typedef bool point_code[4];
+    void next_state();
+    void approx_point(long &x, long &y, bool is_hor, bool is_vert, bool is_paral);
+    bool cut_line(line &res, line &src, long conv);
+    long scalar_prod(point v1, point v2);
+
+    cutter_state state;
+    bool render_check = true;
+
+    QColor cut_col;
+    QColor vis_col;
+    QColor seg_col;
+
+    cut_fig fig;
+    std::vector<line> lines;
+    std::vector<line> vis_lines;
+};
+
+#endif // CUTTER_HPP
