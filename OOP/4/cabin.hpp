@@ -28,13 +28,13 @@ signals:
     void cabin_called();
     void cabin_stopped();
     void cabin_crossed_floor(long, const direction &_direction);
-    void cabin_wait(long floor);
+    void cabin_stay_closed(long floor);
 
 public slots:
     void move();
-    void stop();
-    void wait();
-    void cabin_get_target(long floor, const direction &dir);
+    void stay_not_closed();
+    void stay_closed();
+    void start_moving(long floor, const direction &dir);
 
 private:
     long cur_floor = 1;

@@ -5,7 +5,7 @@ cabin::cabin(QObject *parent) : QObject(parent)
 {
     cross_floor_timer.setSingleShot(true);
 
-    QObject::connect(&_doors, SIGNAL(doors_closed()), this, SLOT(wait()));
+    QObject::connect(&_doors, SIGNAL(doors_closed()), this, SLOT(stay_closed()));
     QObject::connect(this, SIGNAL(cabin_stopped()), &_doors, SLOT(start_opening()));
     QObject::connect(&cross_floor_timer, SIGNAL(timeout()), this, SLOT(move()));
     QObject::connect(this, SIGNAL(cabin_called()), this, SLOT(move()));
@@ -24,7 +24,7 @@ void cabin::move()
     cross_floor_timer.start(CROSS_FLOOR_TIME);
 }
 
-void cabin::stop()
+void cabin::stay_not_closed()
 {
     if (_state != MOVE && _state != STAY_NOT_CLOSED)
         return;
@@ -36,7 +36,7 @@ void cabin::stop()
     emit cabin_stopped();
 }
 
-void cabin::wait()
+void cabin::stay_closed()
 {
     if (_state != STAY_NOT_CLOSED)
         return;
@@ -44,10 +44,10 @@ void cabin::wait()
     _state = STAY_CLOSED;
     qDebug() << "Cabin waiting";
 
-    emit cabin_wait(cur_floor);
+    emit cabin_stay_closed(cur_floor);
 }
 
-void cabin::cabin_get_target(long floor, const direction &dir)
+void cabin::start_moving(long floor, const direction &dir)
 {
     if (_state != STAY_CLOSED)
         return;
