@@ -70,6 +70,48 @@ void point::set_y(long y)
     this->_y = y;
 }
 
+bool line::find_intersection(point &p, line &line, long norm)
+{
+    bool vis1 = is_visible(line.get_p1(), norm);
+    bool vis2 = is_visible(line.get_p2(), norm);
+    bool is_inter = (vis1 || vis2) && (!(vis1 && vis2));
+
+    if (is_inter)
+    {
+        point cut_vec = get_p2() - get_p1();
+        point pol_vec = line.get_p2() - line.get_p1();
+
+        long nominator = cut_vec.y() * (line.get_p1().x() - get_p1().x()) -\
+                         cut_vec.x() * (line.get_p1().y() - get_p1().y());
+        long denominator = pol_vec.y() * cut_vec.x() - pol_vec.x() * cut_vec.y();
+
+        if (denominator == 0)
+        {
+            p = line.get_p2();
+        }
+        else
+        {
+            double t = (double) nominator/ denominator;
+            p = line.get_p1() + (line.get_p2() - line.get_p1()) * t;
+        }
+    }
+
+    return is_inter;
+}
+
+bool line::is_visible(const point &p, long norm)
+{
+    point v1 = get_p2() - get_p1();
+    point v2 = line(get_p2(), p).get_p2() - line(get_p2(), p).get_p1();
+
+    long pr = v1.x() * v2.y() - v1.y() * v2.x();
+
+    if (pr * norm >= 0)
+        return true;
+
+    return false;
+}
+
 point line::find_distance(const point &a)
 {
     point p = p1 - p2;
@@ -182,6 +224,12 @@ long polygon::is_convex()
     curr = sign(r);
     if (curr && curr != prev)
         return 0;
+
+    point tmp;
+    for (long i = 0; i < edges_count() - 1; i++)
+        for (long j = i + 1; j < edges_count(); j++)
+            if (edges[i].find_intersection(tmp, edges[j], prev))
+                return 0;
 
     return prev;
 }

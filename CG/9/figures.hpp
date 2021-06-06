@@ -71,6 +71,8 @@ public:
 
     virtual void paint(QPainter &painter) const override;
 
+    bool find_intersection(point &p, line &line, long norm);
+    bool is_visible(const point &p, long norm);
     point find_distance(const point &a);
     point get_p1();
     point get_p2();

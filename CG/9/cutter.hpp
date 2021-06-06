@@ -31,8 +31,6 @@ public:
     void end_enter();
 
 private:
-    bool find_intersection(point &p, line &cut_line, line &pol_line, long norm);
-    bool is_visible(const point &p, line &_line, long norm);
     void next_state();
     void approx_point(long &x, long &y, bool is_hor, bool is_vert, bool is_paral);
     long scalar_prod(point v1, point v2);

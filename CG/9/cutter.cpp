@@ -212,48 +212,6 @@ void cutter::set_seg_col(const QColor &color)
     enter_fig.set_fg(color);
 }
 
-bool cutter::find_intersection(point &p, line &cut_line, line &pol_line, long norm)
-{
-    bool vis1 = is_visible(pol_line.get_p1(), cut_line, norm);
-    bool vis2 = is_visible(pol_line.get_p2(), cut_line, norm);
-    bool is_inter = (vis1 || vis2) && (!(vis1 && vis2));
-
-    if (is_inter)
-    {
-        point cut_vec = cut_line.get_p2() - cut_line.get_p1();
-        point pol_vec = pol_line.get_p2() - pol_line.get_p1();
-
-        long nominator = cut_vec.y() * (pol_line.get_p1().x() - cut_line.get_p1().x()) -\
-                         cut_vec.x() * (pol_line.get_p1().y() - cut_line.get_p1().y());
-        long denominator = pol_vec.y() * cut_vec.x() - pol_vec.x() * cut_vec.y();
-
-        if (denominator == 0)
-        {
-            p = pol_line.get_p2();
-        }
-        else
-        {
-            double t = (double) nominator/ denominator;
-            p = pol_line.get_p1() + (pol_line.get_p2() - pol_line.get_p1()) * t;
-        }
-    }
-
-    return is_inter;
-}
-
-bool cutter::is_visible(const point &p, line &_line, long norm)
-{
-    point v1 = _line.get_p2() - _line.get_p1();
-    point v2 = line(_line.get_p2(), p).get_p2() - line(_line.get_p2(), p).get_p1();
-
-    long pr = v1.x() * v2.y() - v1.y() * v2.x();
-
-    if (pr * norm >= 0)
-        return true;
-
-    return false;
-}
-
 bool cutter::cut()
 {
     long normal = cut_fig.is_convex();
@@ -267,14 +225,14 @@ bool cutter::cut()
         for (auto vis_line : vis_fig.get_edges())
         {
             point inter;
-            bool is_inter = find_intersection(inter, cut_line, vis_line, normal);
+            bool is_inter = cut_line.find_intersection(inter, vis_line, normal);
 
             if (is_inter)
             {
                 new_vis_fig.add_point(inter);
             }
 
-            bool is_vis = is_visible(vis_line.get_p2(), cut_line, normal);
+            bool is_vis = cut_line.is_visible(vis_line.get_p2(), normal);
             if (is_vis)
                 new_vis_fig.add_point(vis_line.get_p2());
         }
